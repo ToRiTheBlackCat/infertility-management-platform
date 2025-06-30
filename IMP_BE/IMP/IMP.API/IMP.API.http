@@ -1,0 +1,6 @@
+@IMP.API_HostAddress = http://localhost:5159
+
+GET {{IMP.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
