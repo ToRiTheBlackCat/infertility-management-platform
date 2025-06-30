@@ -11,6 +11,7 @@ const TreatmentDetail = () => {
       'IUI is a type of artificial insemination that involves placing sperm inside a woman’s uterus to facilitate fertilization.',
     image: 'anh.jpg',
     ratingScore: 4.7,
+    price: '$10000',
     expertFieldName: 'Infertility Treatment',
     link: '/treatments/',
     treatmentSteps: [
@@ -78,6 +79,7 @@ const TreatmentDetail = () => {
             <div className="col-lg-6">
               <h3 className="mb-3">Overview</h3>
               <p>{treatment.description}</p>
+              <p><strong>Price:</strong> {treatment.price}</p>
               <p><strong>Specialization:</strong> {treatment.expertFieldName}</p>
               <p><strong>Average Rating:</strong> {treatment.ratingScore} ⭐</p>
             </div>
