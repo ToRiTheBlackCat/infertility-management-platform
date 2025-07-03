@@ -1,5 +1,5 @@
 ﻿using IMP.Repository.ViewModels.Auth;
-using IMP.Service.Services;
+using IMP.Service.Services.UserSer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

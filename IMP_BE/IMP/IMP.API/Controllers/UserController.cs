@@ -1,5 +1,7 @@
 ﻿using IMP.Repository.ViewModels.User;
-using IMP.Service.Services;
+using IMP.Service.Services.DoctorSer;
+using IMP.Service.Services.Patient;
+using IMP.Service.Services.UserSer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

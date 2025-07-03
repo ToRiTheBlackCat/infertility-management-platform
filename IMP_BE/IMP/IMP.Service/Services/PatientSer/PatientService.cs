@@ -1,6 +1,7 @@
 ﻿using IMP.Repository.Base;
 using IMP.Repository.Models;
 using IMP.Repository.ViewModels.User;
+using IMP.Service.Helpers;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;
@@ -9,56 +10,53 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IMP.Service.Services
+namespace IMP.Service.Services.PatientSer
 {
-    public interface IDoctorService
+    public interface IPatientService
     {
-        Task<(bool, string)> SignUpDoctor(RegisterDoctorRequest request, User user);
-
+        Task<(bool,string)> SignUpPatient(RegisterPatientRequest request, User user);
     }
-    public class DoctorService : IDoctorService
+    public class PatientService : IPatientService
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IConfiguration _configure;
-        public DoctorService(UnitOfWork unitOfWork, IConfiguration configure)
+        public PatientService(UnitOfWork unitOfWork, IConfiguration configure)
         {
             _unitOfWork = unitOfWork;
             _configure = configure;
         }
-        public async Task<(bool, string)> SignUpDoctor(RegisterDoctorRequest request, User user)
+        public async Task<(bool, string)> SignUpPatient(RegisterPatientRequest request, User user)
         {
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
 
                 //Create new Patient
-                var newDoctor = new Doctor()
+                var newPatient = new Patient()
                 {
-                    DoctorId = user.UserId,
+                    PatientId = user.UserId,
                     FullName = request.FullName,
-                    YearOfBirth = request.YearOfBirth,
-                    PhoneNumber = request.PhoneNumber,
+                    DateOfBirth = request.DateOfBirth,
                     Gender = request.Gender,
-                    Address = request.Address,
-                    Degree = request.Degree,
-                    Status = "Valid"
+                    PhoneNumber = request.PhoneNumber,
+                    Address = request.Address
                 };
-                var isCreated = await _unitOfWork.DoctorRepo.CreateAsync(newDoctor);
+                var isCreated = await _unitOfWork.PatientRepo.CreateAsync(newPatient);
                 await _unitOfWork.CommitTransactionAsync();
 
                 //If create successfully
-                if (isCreated == 1)
+                if(isCreated == 1)
                 {
-                    return (true, "Create Doctor account success");
+                    return (true, "Create Patient account success");
                 }
 
-                return (false, "Create Doctor account fail");
+                return (false, "Create Patient account fail");
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "An unexpected error occurred");
                 await _unitOfWork.RollbackTransactionAsync();
-                return (false, "Error when create Doctor account");
+                return (false,"Error when create Patient account");
             }
         }
     }

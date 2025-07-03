@@ -1,7 +1,9 @@
 using IMP.Repository.Base;
 using IMP.Repository.Models;
 using IMP.Service.Helpers;
-using IMP.Service.Services;
+using IMP.Service.Services.DoctorSer;
+using IMP.Service.Services.Patient;
+using IMP.Service.Services.UserSer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LoginRequest = IMP.Repository.ViewModels.Auth.LoginRequest;
 
-namespace IMP.Service.Services
+namespace IMP.Service.Services.UserSer
 {
     public interface IUserService
     {
