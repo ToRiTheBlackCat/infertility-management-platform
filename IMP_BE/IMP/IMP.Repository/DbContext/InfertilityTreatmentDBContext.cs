@@ -177,8 +177,8 @@ public partial class InfertilityTreatmentDBContext : DbContext
 
             entity.ToTable("Feedback");
 
-            entity.Property(e => e.Comment).HasMaxLength(255);
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
+            entity.Property(e => e.TreatmentComment).HasMaxLength(255);
 
             entity.HasOne(d => d.Booking).WithMany(p => p.Feedbacks)
                 .HasForeignKey(d => d.BookingId)

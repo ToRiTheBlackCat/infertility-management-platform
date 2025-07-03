@@ -13,9 +13,11 @@ public partial class Feedback
 
     public int TreatmentId { get; set; }
 
-    public double Score { get; set; }
+    public double TreatmentScore { get; set; }
 
-    public string Comment { get; set; }
+    public double DoctorScore { get; set; }
+
+    public string TreatmentComment { get; set; }
 
     public DateTime CreateDate { get; set; }
 
