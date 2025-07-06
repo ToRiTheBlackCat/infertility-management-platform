@@ -15,7 +15,7 @@ namespace IMP.API.Controllers
             this.blogService = blogService;
         }
 
-        [HttpGet("Blog")]
+        [HttpGet()]
         public async Task<IActionResult> GetAllBlogs()
         {
             var blogs = await blogService.GetAllBlogPostsAsync();
@@ -26,7 +26,7 @@ namespace IMP.API.Controllers
             return Ok(blogs);
         }
 
-        [HttpGet("Blog/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetBlogById(int id)
         {
             var blog = await blogService.GetBlogPostByIdAsync(id);
@@ -37,7 +37,7 @@ namespace IMP.API.Controllers
             return Ok(blog);
         }
 
-        [HttpPost("Blog")]
+        [HttpPost()]
         public async Task<IActionResult> CreateBlog([FromBody] CreateBlogRequest blogPost)
         {
             if (!ModelState.IsValid)
@@ -50,6 +50,32 @@ namespace IMP.API.Controllers
                 return BadRequest("Failed to create blog post.");
             }
             return CreatedAtAction(nameof(GetBlogById), new { id = createdBlog.BlogPostId }, createdBlog);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBlog(int id, [FromBody] UpdateBlogRequest blogPost)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var updatedBlog = await blogService.UpdateBlogPostAsync(id, blogPost);
+            if (updatedBlog == null)
+            {
+                return NotFound($"Blog with ID {id} not found.");
+            }
+            return Ok(updatedBlog);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBlog(int id)
+        {
+            var isDeleted = await blogService.DeleteBlogPostAsync(id);
+            if (!isDeleted)
+            {
+                return NotFound($"Blog with ID {id} not found.");
+            }
+            return NoContent();
         }
     }
 }

@@ -42,7 +42,6 @@ namespace IMP.Service.Services.BlogSer
 
                 var newBlogPost = new BlogPost
                 {
-                    BlogPostId = (await _unitOfWork.BlogRepo.GetAllAsync()).Count() + 1,
                     Image = blogPost.Image,
                     DoctorId = blogPost.DoctorId,
                     PostTitle = blogPost.PostTitle,
