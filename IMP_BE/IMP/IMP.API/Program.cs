@@ -1,8 +1,9 @@
 using IMP.Repository.Base;
 using IMP.Repository.Models;
 using IMP.Service.Helpers;
+using IMP.Service.Services.BlogSer;
 using IMP.Service.Services.DoctorSer;
-using IMP.Service.Services.Patient;
+using IMP.Service.Services.PatientSer;
 using IMP.Service.Services.UserSer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -90,6 +91,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IUserService, UserServices>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IBlogService, BlogService>();
 
 
 // Register for UnitOfWork and GenericRepository
