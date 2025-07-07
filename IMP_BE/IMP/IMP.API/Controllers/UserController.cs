@@ -1,6 +1,7 @@
 ﻿using IMP.Repository.ViewModels.User;
+using IMP.Service.Helpers;
 using IMP.Service.Services.DoctorSer;
-using IMP.Service.Services.Patient;
+using IMP.Service.Services.PatientSer;
 using IMP.Service.Services.UserSer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ namespace IMP.API.Controllers
         private readonly IUserService _userService;
         private readonly IPatientService _patientService;
         private readonly IDoctorService _dotorService;
+
         public UserController(IUserService userService, IPatientService patientService, IDoctorService dotorService)
         {
             _userService = userService;
@@ -46,11 +48,16 @@ namespace IMP.API.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPost("register-doctor")]
-        public async Task<IActionResult> RegisterDoctor([FromBody] RegisterDoctorRequest request)
+        public async Task<IActionResult> RegisterDoctor([FromForm] RegisterDoctorRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            if (!ImageHelper.IsValidImageFile(request.DoctorImage))
+            {
+                return BadRequest();
             }
 
             var createdUser = await _userService.SignUpUser(request.Email, request.Password, 3);
