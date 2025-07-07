@@ -19,6 +19,7 @@ namespace IMP.Repository.Base
         public PatientRepository PatientRepo { get; }
         public DoctorRepository DoctorRepo { get; }
         public BlogRepository BlogRepo { get; }
+        public ScheduleRepository ScheduleRepo { get; }
 
         #endregion
 
@@ -31,6 +32,7 @@ namespace IMP.Repository.Base
             PatientRepo = new (_context);
             DoctorRepo = new(_context);
             BlogRepo = new(_context);
+            ScheduleRepo = new(_context);
             #endregion
         }
         public async Task BeginTransactionAsync()

@@ -4,6 +4,7 @@ using IMP.Service.Helpers;
 using IMP.Service.Services.BlogSer;
 using IMP.Service.Services.DoctorSer;
 using IMP.Service.Services.PatientSer;
+using IMP.Service.Services.ScheduleSer;
 using IMP.Service.Services.UserSer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -92,6 +93,7 @@ builder.Services.AddScoped<IUserService, UserServices>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 
 
 // Register for UnitOfWork and GenericRepository
