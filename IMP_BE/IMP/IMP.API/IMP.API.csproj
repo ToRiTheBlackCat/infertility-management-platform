@@ -15,4 +15,9 @@
     <ProjectReference Include="..\IMP.Service\IMP.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>

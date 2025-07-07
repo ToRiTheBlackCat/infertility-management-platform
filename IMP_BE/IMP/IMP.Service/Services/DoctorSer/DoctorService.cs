@@ -1,6 +1,8 @@
 ﻿using IMP.Repository.Base;
 using IMP.Repository.Models;
 using IMP.Repository.ViewModels.User;
+using IMP.Service.Helpers;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;
@@ -22,22 +24,27 @@ namespace IMP.Service.Services.DoctorSer
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IConfiguration _configure;
-        public DoctorService(UnitOfWork unitOfWork, IConfiguration configure)
+        private readonly IWebHostEnvironment _env;
+
+        public DoctorService(UnitOfWork unitOfWork, IConfiguration configure,IWebHostEnvironment env)
         {
             _unitOfWork = unitOfWork;
             _configure = configure;
+            _env = env;
         }
         public async Task<(bool, string)> SignUpDoctor(RegisterDoctorRequest request, User user)
         {
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
+                var imageName = ImageHelper.SaveImage(request.DoctorImage, request.DoctorImage.FileName, "doctors", _env);
 
                 //Create new Patient
                 var newDoctor = new Doctor()
                 {
                     DoctorId = user.UserId,
                     FullName = request.FullName,
+                    AvatarImage = imageName,
                     YearOfBirth = request.YearOfBirth,
                     PhoneNumber = request.PhoneNumber,
                     Gender = request.Gender,

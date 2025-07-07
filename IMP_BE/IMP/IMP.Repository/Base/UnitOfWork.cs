@@ -20,7 +20,10 @@ namespace IMP.Repository.Base
         public DoctorRepository DoctorRepo { get; }
         public BlogRepository BlogRepo { get; }
         public ScheduleRepository ScheduleRepo { get; }
-
+        public TreatmentRepository TreatmentRepo { get; }
+        public TreatmentStepRepository TreatmentStepRepo { get; }
+        public FeedbackRepository FeedbackRepo { get; }
+        public TreatmentBookingRepository TreatmentBookingRepo { get; }
         #endregion
 
         public UnitOfWork(InfertilityTreatmentDBContext context)
@@ -33,6 +36,10 @@ namespace IMP.Repository.Base
             DoctorRepo = new(_context);
             BlogRepo = new(_context);
             ScheduleRepo = new(_context);
+            TreatmentRepo = new (_context);
+            TreatmentStepRepo = new (_context);
+            FeedbackRepo = new(_context);
+            TreatmentBookingRepo = new (_context);
             #endregion
         }
         public async Task BeginTransactionAsync()
