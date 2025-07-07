@@ -89,6 +89,26 @@ namespace IMP.API.Controllers
             return Ok("Profile updated successfully");
         }
 
+        [HttpPut("doctor/update-profile")]
+        public async Task<IActionResult> UpdateDoctorProfile([FromBody] UpdateDoctorRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+            var updated = await _dotorService.UpdateDoctorProfile(request, userId);
+            if (!updated)
+            {
+                return BadRequest("Failed to update profile");
+            }
+            return Ok("Profile updated successfully");
+        }
+
         // <summary>
         // Get the patient profile of the currently authenticated user. FOR TESTING AND DEVELOPMENT PURPOSES ONLY/ MAYBE
         // </summary>
