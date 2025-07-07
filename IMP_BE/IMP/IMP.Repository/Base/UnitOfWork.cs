@@ -18,6 +18,11 @@ namespace IMP.Repository.Base
         public UserRepository UserRepo { get; }
         public PatientRepository PatientRepo { get; }
         public DoctorRepository DoctorRepo { get; }
+        public BookingRepository BookingRepo { get; }
+        public AppointmentRepository AppointmentRepo { get; }
+        public StepDetailRepository StepDetailRepo { get; }
+        public TreatmentStepRepository TreatmentStepRepo { get; }
+        public TreatmentRecordRepository TreatmentRecordRepo { get; }
 
         #endregion
 
@@ -29,6 +34,11 @@ namespace IMP.Repository.Base
             UserRepo = new(_context);
             PatientRepo = new (_context);
             DoctorRepo = new(_context);
+            BookingRepo = new (_context);
+            AppointmentRepo = new (_context);
+            StepDetailRepo = new (_context);
+            TreatmentStepRepo = new (_context);
+            TreatmentRecordRepo = new (_context);
             #endregion
         }
         public async Task BeginTransactionAsync()

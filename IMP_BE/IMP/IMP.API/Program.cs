@@ -1,8 +1,10 @@
 using IMP.Repository.Base;
 using IMP.Repository.Models;
 using IMP.Service.Helpers;
+using IMP.Service.Services.AppointmentSer;
 using IMP.Service.Services.DoctorSer;
-using IMP.Service.Services.Patient;
+using IMP.Service.Services.PatientSer;
+using IMP.Service.Services.TreatmentSer;
 using IMP.Service.Services.UserSer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +13,9 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
+using IStepDetailService = IMP.Service.Services.TreatmentSer.IStepDetailService;
+using StepDetailService = IMP.Service.Services.TreatmentSer.StepDetailService;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, loggerConfig) =>
@@ -18,7 +23,13 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 );
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    }
+);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -90,6 +101,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IUserService, UserServices>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IStepDetailService, StepDetailService>();
+builder.Services.AddScoped<ITreatmentRecordService, TreatmentRecordService>();
 
 
 // Register for UnitOfWork and GenericRepository
