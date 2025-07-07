@@ -5,6 +5,7 @@ using IMP.Service.Services.PatientSer;
 using IMP.Service.Services.UserSer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace IMP.API.Controllers
 {
@@ -73,6 +74,65 @@ namespace IMP.API.Controllers
                 isCreated,
                 message
             });
+        }
+
+        [HttpPut("patient/update-profile")]
+        public async Task<IActionResult> UpdatePatientProfile([FromBody] UpatePatientRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+            var updated = await _patientService.UpdatePatientProfile(request, userId);
+            if (!updated)
+            {
+                return BadRequest("Failed to update profile");
+            }
+            return Ok("Profile updated successfully");
+        }
+
+        [HttpPut("doctor/update-profile")]
+        public async Task<IActionResult> UpdateDoctorProfile([FromBody] UpdateDoctorRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+            var updated = await _dotorService.UpdateDoctorProfile(request, userId);
+            if (!updated)
+            {
+                return BadRequest("Failed to update profile");
+            }
+            return Ok("Profile updated successfully");
+        }
+
+        // <summary>
+        // Get the patient profile of the currently authenticated user. FOR TESTING AND DEVELOPMENT PURPOSES ONLY/ MAYBE
+        // </summary>
+        [HttpGet("patient/profile")]
+        public async Task<IActionResult> GetPatientProfile()
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+            var patientProfile = await _patientService.GetPatientByUserId (userId);
+            if (patientProfile == null)
+            {
+                return NotFound("Patient profile not found");
+            }
+            return Ok(patientProfile);
         }
     }
 }

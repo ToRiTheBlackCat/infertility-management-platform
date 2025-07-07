@@ -17,6 +17,8 @@ namespace IMP.Service.Services.DoctorSer
     {
         Task<(bool, string)> SignUpDoctor(RegisterDoctorRequest request, User user);
 
+        Task<bool> UpdateDoctorProfile(UpdateDoctorRequest request, string userId);
+
     }
     public class DoctorService : IDoctorService
     {
@@ -66,6 +68,48 @@ namespace IMP.Service.Services.DoctorSer
                 Log.Error(ex, "An unexpected error occurred");
                 await _unitOfWork.RollbackTransactionAsync();
                 return (false, "Error when create Doctor account");
+            }
+        }
+
+        public async Task<bool> UpdateDoctorProfile(UpdateDoctorRequest request, string userId)
+        {
+            try
+            {
+                await _unitOfWork.BeginTransactionAsync();
+                var doc = await _unitOfWork.DoctorRepo.GetDoctorByUserId(int.Parse(userId));
+                if (doc == null)
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    Log.Error("Doctor not found with userId: {UserId}", userId);
+                    return false;
+                }
+                doc.AvatarImage = request.AvatarImage;
+                doc.FullName = request.FullName;
+                doc.YearOfBirth = request.YearOfBirth;
+                doc.PhoneNumber = request.PhoneNumber;
+                doc.Gender = request.Gender;
+                doc.Address = request.Address;
+                doc.Degree = request.Degree;
+                doc.AverageScore = request.AverageScore;
+                doc.Status = request.Status;
+                var isUpdated = await _unitOfWork.DoctorRepo.UpdateAsync(doc);
+                if (isUpdated == 1)
+                {
+                    await _unitOfWork.CommitTransactionAsync();
+                    return true;
+                }
+                else
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    Log.Error("Failed to update Doctor profile for userId: {UserId}", userId);
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An unexpected error occurred");
+                await _unitOfWork.RollbackTransactionAsync();
+                return false;
             }
         }
     }

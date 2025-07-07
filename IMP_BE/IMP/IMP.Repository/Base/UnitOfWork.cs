@@ -18,11 +18,12 @@ namespace IMP.Repository.Base
         public UserRepository UserRepo { get; }
         public PatientRepository PatientRepo { get; }
         public DoctorRepository DoctorRepo { get; }
+        public BlogRepository BlogRepo { get; }
+        public ScheduleRepository ScheduleRepo { get; }
         public TreatmentRepository TreatmentRepo { get; }
         public TreatmentStepRepository TreatmentStepRepo { get; }
         public FeedbackRepository FeedbackRepo { get; }
         public TreatmentBookingRepository TreatmentBookingRepo { get; }
-
         #endregion
 
         public UnitOfWork(InfertilityTreatmentDBContext context)
@@ -33,6 +34,8 @@ namespace IMP.Repository.Base
             UserRepo = new(_context);
             PatientRepo = new (_context);
             DoctorRepo = new(_context);
+            BlogRepo = new(_context);
+            ScheduleRepo = new(_context);
             TreatmentRepo = new (_context);
             TreatmentStepRepo = new (_context);
             FeedbackRepo = new(_context);

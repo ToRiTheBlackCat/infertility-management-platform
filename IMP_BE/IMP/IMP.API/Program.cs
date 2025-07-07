@@ -1,7 +1,9 @@
 using IMP.Repository.Base;
 using IMP.Repository.Models;
 using IMP.Service.Helpers;
+using IMP.Service.Services.BlogSer;
 using IMP.Service.Services.DoctorSer;
+using IMP.Service.Services.ScheduleSer;
 using IMP.Service.Services.FeedbackSer;
 using IMP.Service.Services.PatientSer;
 using IMP.Service.Services.TreatmentSer;
@@ -98,9 +100,12 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IUserService, UserServices>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddScoped<ITreatmentService, TreatmentService>();
 builder.Services.AddScoped<ITreatmentStepService, TreatmentStepService>();
 builder.Services.AddScoped<IFeedbackService,FeedbackService>(); 
+
 
 
 // Register for UnitOfWork and GenericRepository
