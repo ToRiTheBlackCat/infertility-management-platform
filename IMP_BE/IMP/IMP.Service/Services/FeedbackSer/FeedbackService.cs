@@ -66,9 +66,9 @@ namespace IMP.Service.Services.FeedbackSer
                 await _unitOfWork.BeginTransactionAsync();
 
                 var foundBooking = await _unitOfWork.TreatmentBookingRepo.GetByIdWithIncludeAsync(request.BookingId, "BookingId", x => x.Feedbacks);
-                if (foundBooking == null || foundBooking.Feedbacks.Any())
+                if (foundBooking == null || foundBooking.Status != "Đã hoàn thành" || foundBooking.Feedbacks.Any())
                 {
-                    return (null, "Booking not found or already rated");
+                    return (null, "Booking not found or not finished yet or already rated");
                 }
 
                 var newFeedback = new Feedback()
