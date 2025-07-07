@@ -10,7 +10,7 @@ namespace IMP.Repository.Repos
 {
     public class PatientRepository : GenericRepository<Patient>
     {
-        private readonly InfertilityTreatmentDBContext _context;
+        private new readonly InfertilityTreatmentDBContext _context;
         public PatientRepository(InfertilityTreatmentDBContext context) : base(context)
         {
             _context = context;

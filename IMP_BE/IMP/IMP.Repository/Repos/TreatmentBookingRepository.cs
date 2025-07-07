@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace IMP.Repository.Repos
 {
-    public class DoctorRepository : GenericRepository<Doctor>
+    public class TreatmentBookingRepository : GenericRepository<TreatmentBooking>
     {
         private new readonly InfertilityTreatmentDBContext _context;
-        public DoctorRepository(InfertilityTreatmentDBContext context) : base(context)
+        public TreatmentBookingRepository(InfertilityTreatmentDBContext context) : base(context) 
         {
             _context = context;
         }
