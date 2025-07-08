@@ -10,6 +10,8 @@ namespace IMP.Repository.ViewModels.User
     public class UpatePatientRequest
     {
         [Required]
+        public int PatientId { get; set; }
+        [Required]
         public string FullName { get; set; } = string.Empty;
         [Required]
         public DateOnly DateOfBirth { get; set; }

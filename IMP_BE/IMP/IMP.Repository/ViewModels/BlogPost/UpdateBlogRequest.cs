@@ -11,15 +11,8 @@ namespace IMP.Repository.ViewModels.BlogPost
     {
         public string Image { get; set; }
 
-        [Required]
-        public int DoctorId { get; set; }
-
         public string PostTitle { get; set; }
 
         public string PostContent { get; set; }
-
-        public int? Viewers { get; set; }
-
-        public string Status { get; set; }
     }
 }

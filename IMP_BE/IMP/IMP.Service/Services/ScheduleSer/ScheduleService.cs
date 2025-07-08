@@ -14,9 +14,9 @@ namespace IMP.Service.Services.ScheduleSer
     public interface IScheduleService
     {
         // Define methods for the ScheduleService interface
-        Task<DoctorSchedule?> GetScheduleByoctorIdAsync(int id);
-        Task<DoctorSchedule> CreateScheduleAsync(int doctorId, ScheduleDTO schedule);
-        Task<DoctorSchedule> UpdateScheduleAsync(int doctorId, ScheduleDTO schedule);
+        Task<DoctorSchedule?> GetScheduleByDoctorIdAsync(int id);
+        Task<DoctorSchedule?> CreateScheduleAsync(int doctorId, ScheduleDTO schedule);
+        Task<DoctorSchedule?> UpdateScheduleAsync(int doctorId, ScheduleDTO schedule);
         Task<bool> DeleteScheduleAsync(int id);
     }
 
@@ -27,20 +27,15 @@ namespace IMP.Service.Services.ScheduleSer
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<DoctorSchedule?> GetScheduleByoctorIdAsync(int id)
+        public async Task<DoctorSchedule?> GetScheduleByDoctorIdAsync(int id)
         {
-            await _unitOfWork.BeginTransactionAsync();
-            var schedule = await _unitOfWork.ScheduleRepo.GetByIdAsync(id);
-            if (schedule == null)
-            {
-                await _unitOfWork.RollbackTransactionAsync();
-                return null;
-            }
-            await _unitOfWork.CommitTransactionAsync();
+            var schedule = new DoctorSchedule();
+            schedule = await _unitOfWork.ScheduleRepo.GetByIdAsync(id);
+
             return schedule;
         }
 
-        public async Task<DoctorSchedule> CreateScheduleAsync(int doctorId, ScheduleDTO schedule)
+        public async Task<DoctorSchedule?> CreateScheduleAsync(int doctorId, ScheduleDTO schedule)
         {
             try
             {
@@ -48,10 +43,9 @@ namespace IMP.Service.Services.ScheduleSer
                 var doctor = await _unitOfWork.DoctorRepo.GetByIdAsync(doctorId);
                 if (doctor == null)
                 {
-                    await _unitOfWork.RollbackTransactionAsync();
-                    Log.Error("Doctor with ID {DoctorId} not found", doctorId);
-                    throw new ArgumentException($"Doctor with ID {doctorId} does not exist");
+                    return new DoctorSchedule();
                 }
+
                 DoctorSchedule newSchedule = new DoctorSchedule
                 {
                     DoctorId = doctorId,
@@ -65,17 +59,20 @@ namespace IMP.Service.Services.ScheduleSer
                 };
                 await _unitOfWork.ScheduleRepo.CreateAsync(newSchedule);
                 await _unitOfWork.CommitTransactionAsync();
-                return await _unitOfWork.ScheduleRepo.GetByIdAsync(doctorId);
+
+                var createSchedule = await _unitOfWork.ScheduleRepo.GetByIdAsync(doctorId);
+
+                return createSchedule;
             }
             catch (Exception ex)
             {
                 await _unitOfWork.RollbackTransactionAsync();
                 Log.Error(ex, "An unexpected error occurred while creating the schedule");
-                throw; // Re-throw the exception to be handled by the caller
+                return new DoctorSchedule();
             }
         }
 
-        public async Task<DoctorSchedule> UpdateScheduleAsync(int doctorId, ScheduleDTO schedule)
+        public async Task<DoctorSchedule?> UpdateScheduleAsync(int doctorId, ScheduleDTO schedule)
         {
             try
             {
@@ -83,17 +80,17 @@ namespace IMP.Service.Services.ScheduleSer
                 var doctor = await _unitOfWork.DoctorRepo.GetByIdAsync(doctorId);
                 if (doctor == null)
                 {
-                    await _unitOfWork.RollbackTransactionAsync();
                     Log.Error("Doctor with ID {DoctorId} not found", doctorId);
-                    throw new ArgumentException($"Doctor with ID {doctorId} does not exist");
+                    return new DoctorSchedule();
                 }
+
                 var existingSchedule = await _unitOfWork.ScheduleRepo.GetByIdAsync(doctorId);
                 if (existingSchedule == null)
                 {
-                    await _unitOfWork.RollbackTransactionAsync();
                     Log.Error("Schedule with ID {ScheduleId} not found", doctorId);
-                    throw new ArgumentException($"Schedule with ID {doctorId} does not exist");
+                    return new DoctorSchedule();
                 }
+
                 existingSchedule.Monday = schedule.Monday;
                 existingSchedule.Tuesday = schedule.Tuesday;
                 existingSchedule.Wednesday = schedule.Wednesday;
@@ -101,15 +98,19 @@ namespace IMP.Service.Services.ScheduleSer
                 existingSchedule.Friday = schedule.Friday;
                 existingSchedule.Saturday = schedule.Saturday;
                 existingSchedule.Sunday = schedule.Sunday;
+
                 await _unitOfWork.ScheduleRepo.UpdateAsync(existingSchedule);
                 await _unitOfWork.CommitTransactionAsync();
-                return await _unitOfWork.ScheduleRepo.GetByIdAsync(doctorId);
+
+                var updatedSchedule = await _unitOfWork.ScheduleRepo.GetByIdAsync(doctorId);
+
+                return updatedSchedule;
             }
             catch (Exception ex)
             {
                 await _unitOfWork.RollbackTransactionAsync();
                 Log.Error(ex, "An unexpected error occurred while updating the schedule");
-                throw; // Re-throw the exception to be handled by the caller
+                return new DoctorSchedule();
             }
         }
 
@@ -123,17 +124,19 @@ namespace IMP.Service.Services.ScheduleSer
                 {
                     await _unitOfWork.RollbackTransactionAsync();
                     Log.Error("Schedule with DoctorID {ScheduleId} not found", id);
-                    throw new ArgumentException($"Schedule with ID {id} does not exist");
+                    return false;
                 }
-                await _unitOfWork.ScheduleRepo.RemoveAsync(schedule);
+
+                var result = await _unitOfWork.ScheduleRepo.RemoveAsync(schedule);
                 await _unitOfWork.CommitTransactionAsync();
-                return true;
+
+                return result;
             }
             catch (Exception ex)
             {
                 await _unitOfWork.RollbackTransactionAsync();
                 Log.Error(ex, "An unexpected error occurred while deleting the schedule");
-                throw; // Re-throw the exception to be handled by the caller
+                return false;
             }
         }
     }

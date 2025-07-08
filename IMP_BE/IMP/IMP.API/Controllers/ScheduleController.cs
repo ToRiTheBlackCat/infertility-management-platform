@@ -23,7 +23,7 @@ namespace IMP.API.Controllers
             {
                 return BadRequest("Invalid doctor ID.");
             }
-            var schedule = await _scheduleService.GetScheduleByoctorIdAsync(doctorId);
+            var schedule = await _scheduleService.GetScheduleByDoctorIdAsync(doctorId);
             if (schedule == null)
             {
                 return NotFound($"No schedule found for doctor with ID {doctorId}.");
