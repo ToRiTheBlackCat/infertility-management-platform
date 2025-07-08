@@ -1,6 +1,7 @@
 ﻿using IMP.Service.Services.AppointmentSer;
 using IMP.Service.Services.TreatmentSer;
 using IMP.Service.ViewModel.StepDetail;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -9,6 +10,7 @@ namespace IMP.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StepDetailController : ControllerBase
     {
         private readonly IStepDetailService _stepDetailService;

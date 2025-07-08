@@ -1,6 +1,7 @@
 ﻿using IMP.Repository.ViewModels.User;
 using IMP.Service.Services.AppointmentSer;
 using IMP.Service.ViewModel.Appointment;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -9,6 +10,7 @@ namespace IMP.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AppointmentController : ControllerBase
     {
         private readonly IAppointmentService _appointmentService;
