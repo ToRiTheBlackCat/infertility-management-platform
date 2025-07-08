@@ -1,5 +1,6 @@
 ﻿using IMP.Repository.Base;
 using IMP.Repository.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace IMP.Repository.Repos
 {
     public class PatientRepository : GenericRepository<Patient>
     {
-        private readonly InfertilityTreatmentDBContext _context;
+        private new readonly InfertilityTreatmentDBContext _context;
         public PatientRepository(InfertilityTreatmentDBContext context) : base(context)
         {
             _context = context;

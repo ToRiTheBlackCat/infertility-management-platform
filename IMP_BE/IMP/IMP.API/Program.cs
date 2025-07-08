@@ -1,8 +1,15 @@
 using IMP.Repository.Base;
 using IMP.Repository.Models;
 using IMP.Service.Helpers;
+using IMP.Service.Services.BlogSer;
 using IMP.Service.Services.DoctorSer;
 using IMP.Service.Services.ExpertFieldSer;
+using IMP.Service.Services.PatientSer;
+using IMP.Service.Services.TreatmentSer;
+using IMP.Service.Services.ScheduleSer;
+using IMP.Service.Services.FeedbackSer;
+using IMP.Service.Services.AppointmentSer;
+using IMP.Service.Services.DoctorSer;
 using IMP.Service.Services.PatientSer;
 using IMP.Service.Services.TreatmentSer;
 using IMP.Service.Services.UserSer;
@@ -13,6 +20,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, loggerConfig) =>
@@ -20,7 +28,12 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 );
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

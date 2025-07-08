@@ -13,7 +13,7 @@ namespace IMP.Repository.Repos
     {
         private readonly InfertilityTreatmentDBContext _context;
 
-        public TreatmentBookingRepository(InfertilityTreatmentDBContext context) : base(context)
+        public TreatmentBookingRepository(InfertilityTreatmentDBContext context) : base(context) 
         {
             _context = context;
         }
