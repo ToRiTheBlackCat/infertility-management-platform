@@ -5,6 +5,8 @@ using IMP.Service.Services.BlogSer;
 using IMP.Service.Services.DoctorSer;
 using IMP.Service.Services.ScheduleSer;
 using IMP.Service.Services.FeedbackSer;
+using IMP.Service.Services.AppointmentSer;
+using IMP.Service.Services.DoctorSer;
 using IMP.Service.Services.PatientSer;
 using IMP.Service.Services.TreatmentSer;
 using IMP.Service.Services.UserSer;
@@ -106,6 +108,9 @@ builder.Services.AddScoped<ITreatmentService, TreatmentService>();
 builder.Services.AddScoped<ITreatmentStepService, TreatmentStepService>();
 builder.Services.AddScoped<IFeedbackService,FeedbackService>(); 
 
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IStepDetailService, StepDetailService>();
+builder.Services.AddScoped<ITreatmentRecordService, TreatmentRecordService>();
 
 
 // Register for UnitOfWork and GenericRepository

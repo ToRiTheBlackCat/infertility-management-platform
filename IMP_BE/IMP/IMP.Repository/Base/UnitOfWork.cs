@@ -24,6 +24,11 @@ namespace IMP.Repository.Base
         public TreatmentStepRepository TreatmentStepRepo { get; }
         public FeedbackRepository FeedbackRepo { get; }
         public TreatmentBookingRepository TreatmentBookingRepo { get; }
+        public BookingRepository BookingRepo { get; }
+        public AppointmentRepository AppointmentRepo { get; }
+        public StepDetailRepository StepDetailRepo { get; }
+        public TreatmentRecordRepository TreatmentRecordRepo { get; }
+
         #endregion
 
         public UnitOfWork(InfertilityTreatmentDBContext context)
@@ -40,6 +45,10 @@ namespace IMP.Repository.Base
             TreatmentStepRepo = new (_context);
             FeedbackRepo = new(_context);
             TreatmentBookingRepo = new (_context);
+            BookingRepo = new (_context);
+            AppointmentRepo = new (_context);
+            StepDetailRepo = new (_context);
+            TreatmentRecordRepo = new (_context);
             #endregion
         }
         public async Task BeginTransactionAsync()

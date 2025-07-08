@@ -10,4 +10,8 @@
     <ProjectReference Include="..\IMP.Repository\IMP.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\StepDetailSer\" />
+  </ItemGroup>
+
 </Project>
