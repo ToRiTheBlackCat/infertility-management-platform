@@ -1,6 +1,10 @@
 using IMP.Repository.Base;
 using IMP.Repository.Models;
 using IMP.Service.Helpers;
+using IMP.Service.Services.BlogSer;
+using IMP.Service.Services.DoctorSer;
+using IMP.Service.Services.ScheduleSer;
+using IMP.Service.Services.FeedbackSer;
 using IMP.Service.Services.AppointmentSer;
 using IMP.Service.Services.DoctorSer;
 using IMP.Service.Services.PatientSer;
@@ -14,8 +18,6 @@ using Serilog;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
-using IStepDetailService = IMP.Service.Services.TreatmentSer.IStepDetailService;
-using StepDetailService = IMP.Service.Services.TreatmentSer.StepDetailService;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, loggerConfig) =>
@@ -24,11 +26,10 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 // Add services to the container.
 
 builder.Services.AddControllers().AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    }
-);
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -101,6 +102,12 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IUserService, UserServices>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<ITreatmentService, TreatmentService>();
+builder.Services.AddScoped<ITreatmentStepService, TreatmentStepService>();
+builder.Services.AddScoped<IFeedbackService,FeedbackService>(); 
+
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 builder.Services.AddScoped<IStepDetailService, StepDetailService>();
 builder.Services.AddScoped<ITreatmentRecordService, TreatmentRecordService>();

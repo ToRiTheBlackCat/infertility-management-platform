@@ -9,22 +9,22 @@ using System.Threading.Tasks;
 
 namespace IMP.Repository.Repos
 {
-    public class TreatmentStepRepository : GenericRepository<TreatmentStep>
+    public class FeedbackRepository : GenericRepository<Feedback>
     {
         private new readonly InfertilityTreatmentDBContext _context;
-        public TreatmentStepRepository(InfertilityTreatmentDBContext context) : base(context)
+
+        public FeedbackRepository(InfertilityTreatmentDBContext context) : base(context)
         {
             _context = context;
         }
-
-        public async Task<List<TreatmentStep>> GetStepsListWithTreatmentId(int treatmentId)
+        public async Task<List<Feedback>> GetListFeedbackByTreatmentId(int treatmentId)
         {
-            var stepList = await _context.TreatmentSteps
+            var feedbackList = await _context.Feedbacks
                 .Where(x => x.TreatmentId == treatmentId)
                 .AsNoTracking()
                 .ToListAsync();
 
-            return stepList;
+            return feedbackList;
         }
     }
 }
