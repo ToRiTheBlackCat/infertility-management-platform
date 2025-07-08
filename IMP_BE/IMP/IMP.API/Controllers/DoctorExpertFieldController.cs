@@ -1,11 +1,13 @@
 ﻿using IMP.Repository.Models;
 using IMP.Repository.ViewModels.DoctorExpertField;
 using IMP.Service.Services.ExpertFieldSer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IMP.API.Controllers
 {
+    [Authorize(Roles = "3")]
     [Route("api/[controller]")]
     [ApiController]
     public class DoctorExpertFieldController : ControllerBase

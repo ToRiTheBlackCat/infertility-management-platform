@@ -1,6 +1,7 @@
 ﻿using IMP.Repository.Models;
 using IMP.Repository.ViewModels.TreatmentBooking;
 using IMP.Service.Services.TreatmentSer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,7 @@ namespace IMP.API.Controllers
         {
             _Serv = serv;
         }
-
+        [Authorize(Roles = "1")]
         [HttpGet("/api/Admin/TreatmentBooking")]
         public async Task<IActionResult> Get(int pageNum, int pageSize)
         {
@@ -33,7 +34,7 @@ namespace IMP.API.Controllers
                 });
             }
         }
-
+        [Authorize(Roles = "4")]
         [HttpGet("patient-treatments/{patientId}")]
         public async Task<IActionResult> GetDetailByPatient(int patientId)
         {
@@ -50,7 +51,7 @@ namespace IMP.API.Controllers
                 });
             }
         }
-        
+        [Authorize(Roles="3")]
         [HttpGet("doctor-treatments/{doctorId}")]
         public async Task<IActionResult> GetDetailByDoctor(int doctorId)
         {
