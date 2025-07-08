@@ -18,6 +18,9 @@ namespace IMP.Repository.Base
         public UserRepository UserRepo { get; }
         public PatientRepository PatientRepo { get; }
         public DoctorRepository DoctorRepo { get; }
+        public ExpertFieldRepository ExpertFieldRepo { get; }
+        public DoctorExpertFieldRepository DoctorExpertFieldRepo { get; }
+        public TreatmentBookingRepository TreatmentBookingRepo { get; }
 
         #endregion
 
@@ -26,6 +29,9 @@ namespace IMP.Repository.Base
             _context = context;
 
             #region DI repo here
+            TreatmentBookingRepo = new(_context);
+            DoctorExpertFieldRepo = new(_context);
+            ExpertFieldRepo = new(_context);
             UserRepo = new(_context);
             PatientRepo = new (_context);
             DoctorRepo = new(_context);
