@@ -3,6 +3,7 @@ using IMP.Repository.Base;
 using IMP.Repository.ViewModels.Treatments;
 using IMP.Service.Helpers;
 using IMP.Service.Services.TreatmentSer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +37,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> CreateTreament([FromForm] CreateTreatmentRequest request)
         {
             if (!ModelState.IsValid)
@@ -61,6 +63,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPut("{treatmentId}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> UpdateTreatment(int treatmentId, [FromBody] UpdateTreatmentRequest request)
         {
             if (!ModelState.IsValid)
@@ -87,6 +90,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPut("image-{treatmentId}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> UpdateImageOfTreatment(int treatmentId, IFormFile updateImage)
         {
             var foundTreatment = await _treatmentService.GetTreatmentDetail(treatmentId);
@@ -104,6 +108,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpDelete("{treatmentId}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> DeleteTreatment(int treatmentId)
         {
             var foundTreatment = await _treatmentService.GetTreatmentDetail(treatmentId);

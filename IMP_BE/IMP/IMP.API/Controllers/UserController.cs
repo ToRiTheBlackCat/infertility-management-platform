@@ -101,6 +101,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPut("doctor/update-profile")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> UpdateDoctorProfile([FromBody] UpdateDoctorRequest request)
         {
             if (!ModelState.IsValid)
@@ -154,10 +155,6 @@ namespace IMP.API.Controllers
 
                 return Ok(doctorProfile);
             }
-
-
-
-
         }
     }
 }

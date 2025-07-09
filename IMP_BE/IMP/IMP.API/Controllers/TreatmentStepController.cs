@@ -1,6 +1,7 @@
 ﻿using IMP.Repository.Models;
 using IMP.Repository.ViewModels.Treatments;
 using IMP.Service.Services.TreatmentSer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPost("{treatmentId}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> CreateStepOfTreatment([FromBody] CreateTreatmentStepRequest request)
         {
             if (!ModelState.IsValid)
@@ -36,6 +38,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPut("{treatmentId}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> UpdateStepOfTreatment([FromBody] UpdateTreatmentStepRequest request)
         {
             if (!ModelState.IsValid)
@@ -51,6 +54,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpDelete("{treatmentId}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> DeleteStepOfTreatment([FromForm]int stepId)
         {
             var result = await _treatmentStepService.DeleteTreatmentStep(stepId);
@@ -59,6 +63,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpDelete("{treatmentId}/all-steps")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> DeleteAllStepOfTreatment(int treatmentId)
         {
             var result = await _treatmentStepService.DeleteListOfTreatmentStep(treatmentId);

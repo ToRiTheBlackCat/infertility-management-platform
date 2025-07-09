@@ -17,8 +17,9 @@ namespace IMP.API.Controllers
         {
             _treatmentBookingService = treatmentBookingService;
         }
-        //[Authorize(Roles = "1")]
+      
         [HttpGet("/api/Admin/TreatmentBooking")]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> Get(int pageNum, int pageSize)
         {
             try
@@ -37,7 +38,7 @@ namespace IMP.API.Controllers
                 });
             }
         }
-        //[Authorize(Roles = "4")]
+        [Authorize(Roles = "4")]
         [HttpGet("patient-treatments/{patientId}")]
         public async Task<IActionResult> GetDetailByPatient(int patientId)
         {
@@ -54,7 +55,7 @@ namespace IMP.API.Controllers
                 });
             }
         }
-        //[Authorize(Roles="3")]
+        [Authorize(Roles="3")]
         [HttpGet("doctor-treatments/{doctorId}")]
         public async Task<IActionResult> GetDetailByDoctor(int doctorId)
         {
@@ -90,6 +91,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = "4")]
         public async Task<IActionResult> Create([FromBody] CreateTreatmentBooking form)
         {
             try
@@ -115,6 +117,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPost("cancel/{bookingId}")]
+        [Authorize(Roles = "4")]
         public async Task<IActionResult> Cancel(int bookingId)
         {
             try
@@ -140,6 +143,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPost("done/{bookingId}")]
+        [Authorize(Roles = "3")]
         public async Task<IActionResult> Done(int bookingId)
         {
             try

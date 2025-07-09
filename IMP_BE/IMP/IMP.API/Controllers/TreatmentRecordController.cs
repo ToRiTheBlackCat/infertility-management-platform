@@ -21,6 +21,7 @@ namespace IMP.API.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "1")]
         public async Task<IActionResult> GetAllTreamentRecords([FromQuery] TreatmentRecordGetAllModel model)
         {
             if (!ModelState.IsValid)

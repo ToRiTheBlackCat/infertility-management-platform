@@ -37,6 +37,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Create([FromBody] CreateDoctorExpertField form)
         {
             try
@@ -62,7 +63,8 @@ namespace IMP.API.Controllers
         }
 
         [HttpPut("{doctorId}")]
-        public async Task<IActionResult> UpdateComment(int doctorId, int oldExpertFieldId, int newExpertFieldId)
+        [Authorize(Roles = "2")]
+        public async Task<IActionResult> Update(int doctorId, int oldExpertFieldId, int newExpertFieldId)
         {
             try
             {
@@ -79,6 +81,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpDelete("{doctorId}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Delete(int doctorId, int expertFieldId)
         {
             try

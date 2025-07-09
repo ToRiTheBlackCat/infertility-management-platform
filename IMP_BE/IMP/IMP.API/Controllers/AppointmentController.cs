@@ -21,6 +21,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpGet("doctor-appointment/{bookingId}")]
+        [Authorize(Roles = "3")]
         public async Task<IActionResult> GetDoctorAppointmentsByBookingId(int bookingId)
         {
             if (!ModelState.IsValid)
@@ -34,6 +35,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpGet("patient-appointment/{bookingId}")]
+        [Authorize(Roles = "4")]
         public async Task<IActionResult> GetPatientAppointmentsByBookingId(int bookingId)
         {
             return await GetDoctorAppointmentsByBookingId(bookingId);
@@ -56,7 +58,8 @@ namespace IMP.API.Controllers
         }
 
         [HttpPost("doctor-appointment")]
-        public async Task<IActionResult> CreateAppointMent([FromBody] CreateAppointmentModel model)
+        [Authorize(Roles = "3")]
+        public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -84,6 +87,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPut("doctor-appointment/{appointmentId}")]
+        [Authorize(Roles = "3")]
         public async Task<IActionResult> UpdateAppointment([FromBody] UpdateAppointmentModel model, int appointmentId)
         {
             if (!ModelState.IsValid)
@@ -113,6 +117,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPut("doctor-appointment/done/{appointmentId}")]
+        [Authorize(Roles = "3")]
         public async Task<IActionResult> CheckDoneAppointment([FromBody] DoneAppointmentModel model, int appointmentId)
         {
             if (!ModelState.IsValid)
@@ -142,6 +147,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpDelete("doctor-appointment/{appointmentId}")]
+        [Authorize(Roles = "3")]
         public async Task<IActionResult> DeleteAppointment([FromBody] DeleteAppointmentModel model, int appointmentId)
         {
             if (!ModelState.IsValid)

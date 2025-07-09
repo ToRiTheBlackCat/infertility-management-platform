@@ -1,6 +1,7 @@
 ﻿using IMP.Repository.Models;
 using IMP.Repository.ViewModels.Schedule;
 using IMP.Service.Services.ScheduleSer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,6 +33,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPost("{doctorId}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> CreateSchedule(int doctorId, [FromBody] ScheduleDTO request)
         {
             if (doctorId <= 0)
@@ -51,6 +53,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPut("{doctorId}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> UpdateSchedule(int doctorId, [FromBody] ScheduleDTO request)
         {
             if (doctorId <= 0)
@@ -70,6 +73,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpDelete("{doctorId}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> DeleteSchedule(int doctorId)
         {
             if (doctorId <= 0)

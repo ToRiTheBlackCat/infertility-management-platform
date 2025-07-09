@@ -1,5 +1,6 @@
 ﻿using IMP.Repository.ViewModels.ExpertField;
 using IMP.Service.Services.ExpertFieldSer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -51,6 +52,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Create(string expertFieldName)
         {
             try
@@ -76,6 +78,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Update(int id, string name)
         {
             try
@@ -101,6 +104,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> Delete(int id)
         {
             try
