@@ -19,6 +19,8 @@ namespace IMP.Service.Services.UserSer
     {
         Task<LoginResponse> Authenticate(LoginRequest loginRequest);
         Task<User?> SignUpUser(string email, string password, int roleId);
+        Task<User?> GetUserByRefreshTokenAsync(string refreshToken);
+        Task<int> UpdateUserAccount(User user);
     }
     public class UserServices : IUserService
     {
@@ -77,6 +79,11 @@ namespace IMP.Service.Services.UserSer
             }
         }
 
+        public async Task<User?> GetUserByRefreshTokenAsync(string refreshToken)
+        {
+            return await _unitOfWork.UserRepo.GetByRefreshTokenAsync(refreshToken);
+        }
+
         public async Task<User?> SignUpUser(string email, string password, int roleId)
         {
             try
@@ -115,6 +122,11 @@ namespace IMP.Service.Services.UserSer
                 await _unitOfWork.RollbackTransactionAsync();
                 return new User();
             }
+        }
+
+        public async Task<int> UpdateUserAccount(User user)
+        {
+            return await _unitOfWork.UserRepo.UpdateAsync(user);
         }
     }
 }

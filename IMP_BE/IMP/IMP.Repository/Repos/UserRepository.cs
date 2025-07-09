@@ -25,5 +25,12 @@ namespace IMP.Repository.Repos
                                        && x.Password == password
                                        && x.IsActive);
         }
+
+        public async Task<User?> GetByRefreshTokenAsync(string refreshToken)
+        {
+            var user = await _dbSet.FirstOrDefaultAsync(x => x.RefreshToken == refreshToken &&
+                                                             x.IsActive);
+            return user;
+        }
     }
 }

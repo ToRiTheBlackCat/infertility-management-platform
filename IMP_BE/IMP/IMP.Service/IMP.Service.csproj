@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IMP.Repository\IMP.Repository.csproj" />
+    <Compile Remove="Services\StepDetailSer\**" />
+    <EmbeddedResource Remove="Services\StepDetailSer\**" />
+    <None Remove="Services\StepDetailSer\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\StepDetailSer\" />
+    <ProjectReference Include="..\IMP.Repository\IMP.Repository.csproj" />
   </ItemGroup>
 
 </Project>
