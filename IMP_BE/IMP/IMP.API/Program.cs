@@ -108,6 +108,15 @@ builder.Services.AddScoped<IDoctorService, DoctorService>();
 builder.Services.AddScoped<IDoctorExpertFieldService, DoctorExpertFieldService>();
 builder.Services.AddScoped<IExpertFieldService, ExpertFieldService>();
 builder.Services.AddScoped<ITreatmentBookingService, TreatmentBookingService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<IStepDetailService, StepDetailService>();
+builder.Services.AddScoped<ITreatmentRecordService, TreatmentRecordService>();
+builder.Services.AddScoped<ITreatmentService, TreatmentService>();
+builder.Services.AddScoped<ITreatmentStepService, TreatmentStepService>();
+
 
 
 // Register for UnitOfWork and GenericRepository

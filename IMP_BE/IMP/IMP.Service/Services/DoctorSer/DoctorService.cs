@@ -19,6 +19,7 @@ namespace IMP.Service.Services.DoctorSer
 
         Task<bool> UpdateDoctorProfile(UpdateDoctorRequest request, Doctor doctor);
         Task<Doctor?> GetDoctorByUserId(int userId);
+        Task<List<Doctor>> GetAllDoctor();
 
     }
     public class DoctorService : IDoctorService
@@ -32,6 +33,21 @@ namespace IMP.Service.Services.DoctorSer
             _unitOfWork = unitOfWork;
             _configure = configure;
             _env = env;
+        }
+
+        public async Task<List<Doctor>> GetAllDoctor()
+        {
+            var list = new List<Doctor>();
+            try
+            {
+                list = (await _unitOfWork.DoctorRepo.GetAllAsync()).ToList();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occurred while get doctor List");
+            }
+
+            return list;
         }
 
         public async Task<Doctor?> GetDoctorByUserId(int userId)

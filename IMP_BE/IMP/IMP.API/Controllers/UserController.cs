@@ -156,5 +156,13 @@ namespace IMP.API.Controllers
                 return Ok(doctorProfile);
             }
         }
+
+        [HttpGet("/api/doctor")]
+        public async Task<IActionResult> GetDoctorList()
+        {
+            var doctorList = await _dotorService.GetAllDoctor();
+
+            return Ok(doctorList);
+        }
     }
 }
