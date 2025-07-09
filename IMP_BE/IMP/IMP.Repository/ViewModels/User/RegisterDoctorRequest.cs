@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace IMP.Repository.ViewModels.User
         public string ConfirmPassword { get; set; } = string.Empty;
         [Required]
         public string FullName { get; set; } = string.Empty;
+        [Required]
+        public required IFormFile DoctorImage { get; set; }
         [Required]
         public int YearOfBirth { get; set; }
         [Required]

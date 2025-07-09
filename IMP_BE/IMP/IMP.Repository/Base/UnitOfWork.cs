@@ -18,6 +18,19 @@ namespace IMP.Repository.Base
         public UserRepository UserRepo { get; }
         public PatientRepository PatientRepo { get; }
         public DoctorRepository DoctorRepo { get; }
+        public BlogRepository BlogRepo { get; }
+        public ScheduleRepository ScheduleRepo { get; }
+        public TreatmentRepository TreatmentRepo { get; }
+        public TreatmentStepRepository TreatmentStepRepo { get; }
+        public FeedbackRepository FeedbackRepo { get; }
+        public TreatmentBookingRepository TreatmentBookingRepo { get; }
+        public BookingRepository BookingRepo { get; }
+        public AppointmentRepository AppointmentRepo { get; }
+        public StepDetailRepository StepDetailRepo { get; }
+        public TreatmentRecordRepository TreatmentRecordRepo { get; }
+        public ExpertFieldRepository ExpertFieldRepo { get; }
+        public DoctorExpertFieldRepository DoctorExpertFieldRepo { get; }
+        //public TreatmentBookingRepository TreatmentBookingRepo { get; }
 
         #endregion
 
@@ -26,9 +39,22 @@ namespace IMP.Repository.Base
             _context = context;
 
             #region DI repo here
+            TreatmentBookingRepo = new(_context);
+            DoctorExpertFieldRepo = new(_context);
+            ExpertFieldRepo = new(_context);
             UserRepo = new(_context);
             PatientRepo = new (_context);
             DoctorRepo = new(_context);
+            BlogRepo = new(_context);
+            ScheduleRepo = new(_context);
+            TreatmentRepo = new (_context);
+            TreatmentStepRepo = new (_context);
+            FeedbackRepo = new(_context);
+            TreatmentBookingRepo = new (_context);
+            BookingRepo = new (_context);
+            AppointmentRepo = new (_context);
+            StepDetailRepo = new (_context);
+            TreatmentRecordRepo = new (_context);
             #endregion
         }
         public async Task BeginTransactionAsync()

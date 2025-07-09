@@ -1,9 +1,12 @@
-﻿using IMP.Repository.ViewModels.User;
+﻿using IMP.Repository.Models;
+using IMP.Repository.ViewModels.User;
+using IMP.Service.Helpers;
 using IMP.Service.Services.DoctorSer;
-using IMP.Service.Services.Patient;
+using IMP.Service.Services.PatientSer;
 using IMP.Service.Services.UserSer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace IMP.API.Controllers
 {
@@ -14,6 +17,7 @@ namespace IMP.API.Controllers
         private readonly IUserService _userService;
         private readonly IPatientService _patientService;
         private readonly IDoctorService _dotorService;
+
         public UserController(IUserService userService, IPatientService patientService, IDoctorService dotorService)
         {
             _userService = userService;
@@ -46,11 +50,16 @@ namespace IMP.API.Controllers
 
         [Authorize(Roles = "2")]
         [HttpPost("register-doctor")]
-        public async Task<IActionResult> RegisterDoctor([FromBody] RegisterDoctorRequest request)
+        public async Task<IActionResult> RegisterDoctor([FromForm] RegisterDoctorRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            if (!ImageHelper.IsValidImageFile(request.DoctorImage))
+            {
+                return BadRequest();
             }
 
             var createdUser = await _userService.SignUpUser(request.Email, request.Password, 3);
@@ -66,6 +75,86 @@ namespace IMP.API.Controllers
                 isCreated,
                 message
             });
+        }
+
+        [HttpPut("patient/update-profile")]
+        public async Task<IActionResult> UpdatePatientProfile([FromBody] UpatePatientRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var patient = await _patientService.GetPatientByUserId(request.PatientId);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            var updated = await _patientService.UpdatePatientProfile(request, patient);
+            if (!updated)
+            {
+                return BadRequest("Failed to update profile");
+            }
+
+            return Ok("Profile updated successfully");
+        }
+
+        [HttpPut("doctor/update-profile")]
+        [Authorize(Roles = "2")]
+        public async Task<IActionResult> UpdateDoctorProfile([FromBody] UpdateDoctorRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var doctor = await _dotorService.GetDoctorByUserId(request.DoctorId);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
+            var updated = await _dotorService.UpdateDoctorProfile(request, doctor);
+            if (!updated)
+            {
+                return BadRequest("Failed to update profile");
+            }
+
+            return Ok("Profile updated successfully");
+        }
+
+
+        [HttpPost("profile")]
+        public async Task<IActionResult> GetUserProfile([FromBody] UserProfileRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (request.isDoctor == false)
+            {
+                var patientProfile = await _patientService.GetPatientByUserId(request.UserId);
+
+                if (patientProfile == null)
+                {
+                    return NotFound("Patient profile not found");
+                }
+
+                return Ok(patientProfile);
+            }
+            else
+            {
+                var doctorProfile = await _dotorService.GetDoctorByUserId(request.UserId);
+
+                if (doctorProfile == null)
+                {
+                    return NotFound("Doctor profile not found");
+                }
+
+                return Ok(doctorProfile);
+            }
         }
     }
 }

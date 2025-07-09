@@ -1,6 +1,8 @@
 ﻿using IMP.Repository.Base;
 using IMP.Repository.Models;
 using IMP.Repository.ViewModels.User;
+using IMP.Service.Helpers;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;
@@ -15,27 +17,49 @@ namespace IMP.Service.Services.DoctorSer
     {
         Task<(bool, string)> SignUpDoctor(RegisterDoctorRequest request, User user);
 
+        Task<bool> UpdateDoctorProfile(UpdateDoctorRequest request, Doctor doctor);
+        Task<Doctor?> GetDoctorByUserId(int userId);
+
     }
     public class DoctorService : IDoctorService
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IConfiguration _configure;
-        public DoctorService(UnitOfWork unitOfWork, IConfiguration configure)
+        private readonly IWebHostEnvironment _env;
+
+        public DoctorService(UnitOfWork unitOfWork, IConfiguration configure, IWebHostEnvironment env)
         {
             _unitOfWork = unitOfWork;
             _configure = configure;
+            _env = env;
         }
+
+        public async Task<Doctor?> GetDoctorByUserId(int userId)
+        {
+            try
+            {
+                return await _unitOfWork.DoctorRepo.GetByIdAsync(userId);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An error occurred while retrieving patient with ID {PatientId}", userId);
+                return null;
+            }
+        }
+
         public async Task<(bool, string)> SignUpDoctor(RegisterDoctorRequest request, User user)
         {
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
+                var imageName = ImageHelper.SaveImage(request.DoctorImage, request.DoctorImage.FileName, "doctors", _env);
 
                 //Create new Patient
                 var newDoctor = new Doctor()
                 {
                     DoctorId = user.UserId,
                     FullName = request.FullName,
+                    AvatarImage = imageName,
                     YearOfBirth = request.YearOfBirth,
                     PhoneNumber = request.PhoneNumber,
                     Gender = request.Gender,
@@ -59,6 +83,41 @@ namespace IMP.Service.Services.DoctorSer
                 Log.Error(ex, "An unexpected error occurred");
                 await _unitOfWork.RollbackTransactionAsync();
                 return (false, "Error when create Doctor account");
+            }
+        }
+
+        public async Task<bool> UpdateDoctorProfile(UpdateDoctorRequest request, Doctor doctor)
+        {
+            try
+            {
+
+                await _unitOfWork.BeginTransactionAsync();
+
+                doctor.FullName = request.FullName;
+                doctor.YearOfBirth = request.YearOfBirth;
+                doctor.PhoneNumber = request.PhoneNumber;
+                doctor.Gender = request.Gender;
+                doctor.Address = request.Address;
+                doctor.Degree = request.Degree;
+
+
+                var isUpdated = await _unitOfWork.DoctorRepo.UpdateAsync(doctor);
+                await _unitOfWork.CommitTransactionAsync();
+
+                if (isUpdated != 1)
+                {
+                    await _unitOfWork.RollbackTransactionAsync();
+                    Log.Error("Failed to update Doctor profile for userId: {UserId}", doctor.DoctorId);
+                    return false;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "An unexpected error occurred");
+                await _unitOfWork.RollbackTransactionAsync();
+                return false;
             }
         }
     }
