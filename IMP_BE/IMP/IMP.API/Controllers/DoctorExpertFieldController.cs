@@ -7,24 +7,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IMP.API.Controllers
 {
-    [Authorize(Roles = "3")]
+    //[Authorize(Roles = "3")]
     [Route("api/[controller]")]
     [ApiController]
     public class DoctorExpertFieldController : ControllerBase
     {
-        private readonly IDoctorExpertFieldService _Serv;
+        private readonly IDoctorExpertFieldService _doctorExpertFieldService;
 
         public DoctorExpertFieldController(IDoctorExpertFieldService serv)
         {
-            _Serv = serv;
+            _doctorExpertFieldService = serv;
         }
 
         [HttpGet("{doctorId}")]
-        public async Task<IActionResult> GetDetail(int doctorId, int expertFieldId)
+        public async Task<IActionResult> GetDetail(int doctorId)
         {
             try
             {
-                var result = await _Serv.GetDetails(doctorId, expertFieldId);
+                var result = await _doctorExpertFieldService.GetDetails(doctorId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -41,7 +41,7 @@ namespace IMP.API.Controllers
         {
             try
             {
-                var result = await _Serv.Create(form);
+                var result = await _doctorExpertFieldService.Create(form);
                 return result.status.Contains("Failure")
                     ? Problem(title: "Docter expert field creation failed",
                               statusCode: StatusCodes.Status400BadRequest,
@@ -61,12 +61,12 @@ namespace IMP.API.Controllers
             }
         }
 
-        [HttpPatch("{doctorId}")]
+        [HttpPut("{doctorId}")]
         public async Task<IActionResult> UpdateComment(int doctorId, int oldExpertFieldId, int newExpertFieldId)
         {
             try
             {
-                var result = await _Serv.Update(doctorId, oldExpertFieldId, newExpertFieldId);
+                var result = await _doctorExpertFieldService.Update(doctorId, oldExpertFieldId, newExpertFieldId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -83,7 +83,7 @@ namespace IMP.API.Controllers
         {
             try
             {
-                var result = await _Serv.Delete(doctorId, expertFieldId);
+                var result = await _doctorExpertFieldService.Delete(doctorId, expertFieldId);
                 return Ok(result);
             }
             catch (Exception ex)

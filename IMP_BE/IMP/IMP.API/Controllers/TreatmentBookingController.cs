@@ -11,19 +11,22 @@ namespace IMP.API.Controllers
     [ApiController]
     public class TreatmentBookingController : ControllerBase
     {
-        private readonly ITreatmentBookingService _Serv;
+        private readonly ITreatmentBookingService _treatmentBookingService;
 
-        public TreatmentBookingController(ITreatmentBookingService serv)
+        public TreatmentBookingController(ITreatmentBookingService treatmentBookingService)
         {
-            _Serv = serv;
+            _treatmentBookingService = treatmentBookingService;
         }
-        [Authorize(Roles = "1")]
+        //[Authorize(Roles = "1")]
         [HttpGet("/api/Admin/TreatmentBooking")]
         public async Task<IActionResult> Get(int pageNum, int pageSize)
         {
             try
             {
-                var result = await _Serv.GetAllWithPaging(pageNum, pageSize);
+                pageNum = pageNum != 0 ? pageNum : 1;
+                pageSize = pageSize != 0 ? pageSize : 6;
+
+                var result = await _treatmentBookingService.GetAllWithPaging(pageNum, pageSize);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -34,13 +37,13 @@ namespace IMP.API.Controllers
                 });
             }
         }
-        [Authorize(Roles = "4")]
+        //[Authorize(Roles = "4")]
         [HttpGet("patient-treatments/{patientId}")]
         public async Task<IActionResult> GetDetailByPatient(int patientId)
         {
             try
             {
-                var result = await _Serv.GetDetailsByPatient(patientId);
+                var result = await _treatmentBookingService.GetDetailsByPatient(patientId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -51,13 +54,13 @@ namespace IMP.API.Controllers
                 });
             }
         }
-        [Authorize(Roles="3")]
+        //[Authorize(Roles="3")]
         [HttpGet("doctor-treatments/{doctorId}")]
         public async Task<IActionResult> GetDetailByDoctor(int doctorId)
         {
             try
             {
-                var result = await _Serv.GetDetailsByDoctor(doctorId);
+                var result = await _treatmentBookingService.GetDetailsByDoctor(doctorId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -74,7 +77,7 @@ namespace IMP.API.Controllers
         {
             try
             {
-                var result = await _Serv.GetDetails(bookingId);
+                var result = await _treatmentBookingService.GetDetails(bookingId);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -91,7 +94,7 @@ namespace IMP.API.Controllers
         {
             try
             {
-                var result = await _Serv.Create(form);
+                var result = await _treatmentBookingService.Create(form);
                 return result.status.Contains("Failure")
                     ? Problem(title: "Booking creation failed",
                               statusCode: StatusCodes.Status400BadRequest,
@@ -116,7 +119,32 @@ namespace IMP.API.Controllers
         {
             try
             {
-                var result = await _Serv.Cancel(bookingId);
+                var result = await _treatmentBookingService.Cancel(bookingId);
+                return result.status.Contains("Failure")
+                    ? Problem(title: "Booking cancellation failed",
+                              statusCode: StatusCodes.Status400BadRequest,
+                              detail: result.status)
+                    : Ok(new
+                    {
+                        Message = result.status,
+                        Object = result.view
+                    });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Message = ex.Message
+                });
+            }
+        }
+
+        [HttpPost("done/{bookingId}")]
+        public async Task<IActionResult> Done(int bookingId)
+        {
+            try
+            {
+                var result = await _treatmentBookingService.MarkDone(bookingId);
                 return result.status.Contains("Failure")
                     ? Problem(title: "Booking cancellation failed",
                               statusCode: StatusCodes.Status400BadRequest,

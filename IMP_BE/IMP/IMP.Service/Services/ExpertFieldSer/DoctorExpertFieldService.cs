@@ -14,7 +14,7 @@ namespace IMP.Service.Services.ExpertFieldSer
     public interface IDoctorExpertFieldService
     {
 
-        Task<DoctorExpertFieldView> GetDetails(int doctorId, int expertFieldId);
+        Task<DoctorExpertFieldView> GetDetails(int doctorId);
 
         Task<(string status, DoctorExpertField view)> Create(CreateDoctorExpertField form);
 
@@ -25,26 +25,26 @@ namespace IMP.Service.Services.ExpertFieldSer
 
     public class DoctorExpertFieldService : IDoctorExpertFieldService
     {
-        private readonly UnitOfWork _uOW;
+        private readonly UnitOfWork _unitOfWork;
 
         public DoctorExpertFieldService(UnitOfWork uOW)
         {
-            _uOW = uOW;
+            _unitOfWork = uOW;
         }
 
         public async Task<(string status, DoctorExpertField view)> Create(CreateDoctorExpertField form)
         {
             try
             {
-                await _uOW.BeginTransactionAsync();
+                await _unitOfWork.BeginTransactionAsync();
 
                 DoctorExpertField mapped = new DoctorExpertField();
                 mapped.ExpertFieldId = form.ExpertFieldId;
                 mapped.DoctorId = form.DoctorId;
 
-                var result = await _uOW.DoctorExpertFieldRepo.CreateAsync(mapped);
+                var result = await _unitOfWork.DoctorExpertFieldRepo.CreateAsync(mapped);
 
-                await _uOW.CommitTransactionAsync();
+                await _unitOfWork.CommitTransactionAsync();
 
                 if (result > 0)
                     return ("Success: Create successfully", mapped);
@@ -53,7 +53,7 @@ namespace IMP.Service.Services.ExpertFieldSer
             catch (Exception ex)
             {
                 Log.Error(ex, "An unexpected error occurred");
-                await _uOW.RollbackTransactionAsync();
+                await _unitOfWork.RollbackTransactionAsync();
                 return ("Failure: Error when creating new field.", null);
             }
         }
@@ -62,15 +62,15 @@ namespace IMP.Service.Services.ExpertFieldSer
         {
             try
             {
-                var existing = await _uOW.DoctorExpertFieldRepo.GetAsync(doctorId, expertFieldId);
+                var existing = await _unitOfWork.DoctorExpertFieldRepo.GetAsync(doctorId, expertFieldId);
                 if (existing == null)
                     return "Failure: This object Id doesn't exist in the database";
 
-                await _uOW.BeginTransactionAsync();
+                await _unitOfWork.BeginTransactionAsync();
 
-                var result = await _uOW.DoctorExpertFieldRepo.RemoveAsync(existing);
+                var result = await _unitOfWork.DoctorExpertFieldRepo.RemoveAsync(existing);
 
-                await _uOW.CommitTransactionAsync();
+                await _unitOfWork.CommitTransactionAsync();
 
                 if (result)
                     return "Success: Remove successfully";
@@ -79,26 +79,31 @@ namespace IMP.Service.Services.ExpertFieldSer
             catch (Exception ex)
             {
                 Log.Error(ex, "An unexpected error occurred");
-                await _uOW.RollbackTransactionAsync();
+                await _unitOfWork.RollbackTransactionAsync();
                 return "Failure: Error when deleting field.";
             }
         }
 
-        public async Task<DoctorExpertFieldView> GetDetails(int doctorId, int expertFieldId)
+        public async Task<DoctorExpertFieldView> GetDetails(int doctorId)
         {
-            var result = await _uOW.DoctorExpertFieldRepo.GetAsync(doctorId, expertFieldId);
+            var doctor = await _unitOfWork.DoctorRepo.GetByIdWithIncludeAsync(doctorId, "DoctorId", x => x.DoctorExpertField);
+            if (doctor == null || doctor.DoctorExpertField == null)
+            {
+                return new DoctorExpertFieldView();
+            }
+
+            var result = await _unitOfWork.DoctorExpertFieldRepo.GetAsync(doctorId, doctor.DoctorExpertField.ExpertFieldId);
+            if(result == null)
+            {
+                return new DoctorExpertFieldView();
+            }
 
             var mapped = new DoctorExpertFieldView();
+
+            mapped.DoctorExpertFieldId = result.ExpertFieldId;
             mapped.ExpertFieldName = result.ExpertField.ExpertFieldName;
-            mapped.AvatarImage = result.Doctor.AvatarImage;
-            mapped.FullName = result.Doctor.FullName;
-            mapped.YearOfBirth = result.Doctor.YearOfBirth;
-            mapped.PhoneNumber = result.Doctor.PhoneNumber;
-            mapped.Gender = result.Doctor.Gender;
-            mapped.Address = result.Doctor.Address;
-            mapped.Degree = result.Doctor.Degree;
-            mapped.AverageScore = result.Doctor.AverageScore;
-            mapped.Status = result.Doctor.Status;
+            mapped.DoctorId = doctor.DoctorId;
+            mapped.DoctorName = doctor.FullName;
 
             return mapped;
         }
@@ -107,20 +112,20 @@ namespace IMP.Service.Services.ExpertFieldSer
         {
             try
             {
-                var existing = await _uOW.DoctorExpertFieldRepo.GetAsync(doctorId, oldExpertFieldId);
+                var existing = await _unitOfWork.DoctorExpertFieldRepo.GetAsync(doctorId, oldExpertFieldId);
 
                 if (existing == null)
                     return ("Failure: This object doesn't exist in the database", null);
 
-                await _uOW.BeginTransactionAsync();
+                await _unitOfWork.BeginTransactionAsync();
 
                 DoctorExpertField mapped = new DoctorExpertField();
                 mapped.ExpertFieldId = newExpertFieldId;
                 mapped.DoctorId = doctorId;
 
-                var result = await _uOW.DoctorExpertFieldRepo.UpdateAsync(mapped);
+                var result = await _unitOfWork.DoctorExpertFieldRepo.UpdateAsync(mapped);
 
-                await _uOW.CommitTransactionAsync();
+                await _unitOfWork.CommitTransactionAsync();
 
                 if (result > 0)
                     return ("Successful!", mapped);
@@ -129,7 +134,7 @@ namespace IMP.Service.Services.ExpertFieldSer
             catch (Exception ex)
             {
                 Log.Error(ex, "An unexpected error occurred");
-                await _uOW.RollbackTransactionAsync();
+                await _unitOfWork.RollbackTransactionAsync();
                 return ("Failure: Error when updating new field.", null);
             }
         }

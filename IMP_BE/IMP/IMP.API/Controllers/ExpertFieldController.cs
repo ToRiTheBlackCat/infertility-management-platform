@@ -9,11 +9,11 @@ namespace IMP.API.Controllers
     [ApiController]
     public class ExpertFieldController : ControllerBase
     {
-        private readonly IExpertFieldService _Serv;
+        private readonly IExpertFieldService _expertFieldService;
 
         public ExpertFieldController(IExpertFieldService serv)
         {
-            _Serv = serv;
+            _expertFieldService = serv;
         }
 
         [HttpGet]
@@ -21,7 +21,7 @@ namespace IMP.API.Controllers
         {
             try
             {
-                var result = await _Serv.GetAll();
+                var result = await _expertFieldService.GetAll();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -38,7 +38,7 @@ namespace IMP.API.Controllers
         {
             try
             {
-                var result = await _Serv.GetDetails(id);
+                var result = await _expertFieldService.GetDetails(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace IMP.API.Controllers
         {
             try
             {
-                var result = await _Serv.Create(expertFieldName);
+                var result = await _expertFieldService.Create(expertFieldName);
                 return result.status.Contains("Failure")
                     ? Problem(title: "Expert field creation failed",
                               statusCode: StatusCodes.Status400BadRequest,
@@ -75,12 +75,12 @@ namespace IMP.API.Controllers
             }
         }
 
-        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, string name)
         {
             try
             {
-                var result = await _Serv.Update(id, name);
+                var result = await _expertFieldService.Update(id, name);
                 return result.status.Contains("Failure")
                     ? Problem(title: "Expert field creation failed",
                               statusCode: StatusCodes.Status400BadRequest,
@@ -105,7 +105,7 @@ namespace IMP.API.Controllers
         {
             try
             {
-                var result = await _Serv.Delete(id);
+                var result = await _expertFieldService.Delete(id);
                 return Ok(result);
             }
             catch (Exception ex)

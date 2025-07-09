@@ -10,24 +10,9 @@ namespace IMP.Repository.ViewModels.DoctorExpertField
 {
     public class DoctorExpertFieldView
     {
+        public int DoctorExpertFieldId { get; set; }
         public string ExpertFieldName { get; set; }
-
-        public string AvatarImage { get; set; }
-
-        public string FullName { get; set; }
-
-        public int YearOfBirth { get; set; }
-
-        public string PhoneNumber { get; set; }
-
-        public string Gender { get; set; }
-
-        public string Address { get; set; }
-
-        public string Degree { get; set; }
-
-        public double? AverageScore { get; set; }
-
-        public string Status { get; set; }
+        public int DoctorId { get; set; }
+        public string DoctorName { get; set; }
     }
 }

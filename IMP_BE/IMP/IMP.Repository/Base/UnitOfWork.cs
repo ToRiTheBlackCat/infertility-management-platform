@@ -30,7 +30,7 @@ namespace IMP.Repository.Base
         public TreatmentRecordRepository TreatmentRecordRepo { get; }
         public ExpertFieldRepository ExpertFieldRepo { get; }
         public DoctorExpertFieldRepository DoctorExpertFieldRepo { get; }
-        public TreatmentBookingRepository TreatmentBookingRepo { get; }
+        //public TreatmentBookingRepository TreatmentBookingRepo { get; }
 
         #endregion
 
