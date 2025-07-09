@@ -47,8 +47,8 @@ root.render(
     <Route path="/blogs" element={<Blog/>}/>
     <Route path="//blog-detail" element={<BlogDetail/>}/>
     <Route path="/contacts" element={<Contact/>}/>
-    <Route path="/treatment-detail" element={<TreatmentDetail/>}/>
-    <Route path="/doctor-schedule" element={<DoctorSchedule/>}/>
+    <Route path="/treatment-detail/:id" element={<TreatmentDetail/>}/>
+    <Route path="/doctor-schedule/:id" element={<DoctorSchedule/>}/>
     
     </Route>
     <Route path="/login" element={<Login/>}/>

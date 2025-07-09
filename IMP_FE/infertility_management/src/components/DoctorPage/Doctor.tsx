@@ -1,34 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-
-const doctors = [
-  {
-    name: 'Dr: Hamir Jun.',
-    specialty: 'Gastroenterology',
-    img: 'assets/img/doctors/doc1.png',
-    icon: 'assets/icons/stomach.svg'
-  },
-  {
-    name: 'Dr: Gideu Ds.',
-    specialty: 'Neurology',
-    img: 'assets/img/doctors/doc2.png',
-    icon: 'assets/icons/brain.svg'
-  },
-  {
-    name: 'Dr: Huduei Chy.',
-    specialty: 'Orthopedics',
-    img: 'assets/img/doctors/doc3.png',
-    icon: 'assets/icons/knee.svg'
-  },
-  {
-    name: 'Dr: Marke Ah.',
-    specialty: 'Gynecology',
-    img: 'assets/img/doctors/doc4.png',
-    icon: 'assets/icons/womb.svg'
-  }
-];
+import { fetchDoctor } from '../../service/authService';
+import { DoctorData } from '../../types/common';
+import doctorImg from '../../assets/img/doctor.jpg'; 
+import doctorSpeciality from "../../assets/img/doctorSpeciality.jpg";
 
 const Doctor = () => {
+  const [doctors, setDoctors] = useState<DoctorData[]>([]);
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const doctorData = await fetchDoctor();
+        if (doctorData) {
+          setDoctors(doctorData);
+        }
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
+      }
+    };
+    fetchDoctors();
+  }, []);
   return (
     <section id="doctors" className="service-section pt-150">
       <div className="container">
@@ -48,14 +39,14 @@ const Doctor = () => {
             <div className="col-lg-3 col-md-6" key={index}>
               <div className="service-item text-center mb-30">
                 <div className="doctor-img mb-20">
-                  <img src={doctor.img} alt={doctor.name} className="img-fluid rounded" />
+                  <img src={doctorImg} alt={doctor.fullName} className="img-fluid rounded" />
                 </div>
                 <div className="service-icon mb-15">
-                  <img src={doctor.icon} alt={`${doctor.specialty} icon`} />
+                  <img src={doctorSpeciality} alt={`${doctor.degree} icon`} />
                 </div>
                 <div className="service-content">
-                  <h5 className="mb-5">{doctor.name}</h5>
-                  <p className="text-muted">{doctor.specialty}</p>
+                  <h5 className="mb-5">{doctor.fullName}</h5>
+                  <p className="text-muted">{doctor.degree}</p>
                 </div>
                 <div className="service-overlay img-bg"></div>
                 <div className="col-12">
@@ -68,7 +59,7 @@ const Doctor = () => {
                   >
                     Check schedule
                   </a> */}
-                   <NavLink to="/doctor-schedule" className="read-more">
+                   <NavLink to={`/doctor-schedule/${doctor.doctorId}`} className="read-more">
                     <a
                     className="btn theme-btn page-scroll"
                     data-animation="fadeInUp"

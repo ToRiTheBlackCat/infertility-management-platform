@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../../assets/css/main.css";
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { LoginUser } from "../../service/userService"; 
+import { toast } from "react-toastify";
 
 interface FormState {
   name?: string;
@@ -12,6 +14,7 @@ interface FormState {
 const Login: React.FC = () => {
   const [type, setType] = useState<"signIn" | "signUp">("signIn");
   const location = useLocation(); // 👈 get location from react-router-dom
+  const navigate = useNavigate(); 
 
   // Detect URL hash when the page loads
   useEffect(() => {
@@ -41,10 +44,21 @@ const Login: React.FC = () => {
     setSignUpState(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSignInSubmit = (e: React.FormEvent) => {
+  const handleSignInSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`You are login with email: ${signInState.email} and password: ${signInState.password}`);
-    setSignInState({ email: "", password: "" });
+    try{
+      const { email, password } = signInState;
+      const response = await LoginUser(email, password);
+      if(response){
+        toast.success("Login successful!");
+        navigate("/"); 
+      }else{
+        toast.error("Login failed. Please check your credentials.");
+      }
+    }catch(error){
+      console.error("Login error:", error);
+      toast.error("An error occurred during login. Please try again.");
+    }
   };
 
   const handleSignUpSubmit = (e: React.FormEvent) => {
