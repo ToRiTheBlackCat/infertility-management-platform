@@ -1,7 +1,26 @@
-import React from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { fetchTreatment } from '../../service/authService';
+import { TreatmentData } from '../../types/common';
+import TreatementImg from "../../assets/img/OIP.jpg"
 
 const Body = () => {
+  const [treatments, setTreatments] = useState<TreatmentData[]>([]);
+
+  useEffect(() => {
+    const getTreatments = async () => {
+      try {
+        const response = await fetchTreatment();
+        if (response) {
+          setTreatments(response);
+        } else {
+          console.error('No treatments found');
+        }
+      } catch (error) {
+        console.error('Error fetching treatments:', error);
+      }
+    };
+    getTreatments();
+  }, []);
   return (
     <div>
       {/* About Us */}
@@ -55,24 +74,16 @@ With a team of certified and experienced doctors, nurses, and care coordinators,
 
         <div className="row">
           {/* Example Service Item */}
-          {[
-            { title: 'AAAA', iconPath: 'assets/icons/heart.svg' },
-            { title: 'BBBB', iconPath: 'assets/icons/brain.svg' },
-            { title: 'CCCC', iconPath: 'assets/icons/stomach.svg' },
-            { title: 'DDDD', iconPath: 'assets/icons/knee.svg' },
-            { title: 'EEEE', iconPath: 'assets/icons/womb.svg' },
-            { title: 'FFFF', iconPath: 'assets/icons/aaaa.svg' }
-
-          ].map((service, index) => (
+          {treatments.map((service, index) => (
             <div className="col-lg-4 col-md-6" key={index}>
               <div className="service-item mb-30">
                 <div className="service-icon mb-25">
-                  <img src={service.iconPath} alt={`${service.title} icon`} />
+                  <img src={TreatementImg} alt={`${service.treatmentName} icon`} />
                 </div>
                 <div className="service-content">
-                  <h4>{service.title}</h4>
+                  <h4>{service.treatmentName}</h4>
                   <p>Lorem ipsum dolor sit amet, consetet sadipscing elitr, sed dinonumy eirmod tempor invidunt.</p>
-                  <a href="#" className="read-more">Read More <i className="lni lni-arrow-right"></i></a>
+                  <a href={`/treatment-detail/${service.treatmentId}`} className="read-more">Read More <i className="lni lni-arrow-right"></i></a>
                 </div>
                 <div className="service-overlay img-bg"></div>
               </div>

@@ -1,39 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import FptUImg from '../../assets/img/fptu.jpg'
+import { fetchBlog } from '../../service/authService';
+import { BlogData } from '../../types/common';
+import { baseUrl } from '../../config/base';
 
-const blogs = [
-  {
-    title: 'Empowering People to Improve Their Lives. Acadia Hospital.',
-    image: '/assets/img/fptu.jpg',
-    description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr...',
-    treatment: 'Dental',
-    date: 'APR 21, 2020',
-  },
-  {
-    title: 'Creating healthy tomorrows...for one child, All Children',
-    image: '/assets/img/fptu.jpg',
-    description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr...',
-    treatment: 'Fertility',
-    date: 'APR 22, 2020',
-  },
-  {
-    title: 'Empowering People to Improve Their Lives. Acadia Hospital.',
-    image: '/assets/img/fptu.jpg',
-    description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr...',
-    treatment: 'Dental',
-    date: 'APR 21, 2020',
-  },
-  {
-    title: 'Creating healthy tomorrows...for one child, All Children',
-    image: '/assets/img/fptu.jpg',
-    description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr...',
-    treatment: 'Fertility',
-    date: 'APR 22, 2020',
-  },
-];
 
 const Blog = () => {
+  const [blogs, setBlogs] = useState<BlogData[]>([]);
+
+  useEffect(() => {
+    const getBlogs = async () => {
+      try {
+        const response = await fetchBlog();
+        if (response) {
+          setBlogs(response);
+        } else {
+          console.error('No blogs found');
+        }
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+      }
+    };
+    getBlogs();
+  },[]);
   return (
     <section id="blog" className="service-section pt-150 pb-120">
       <div className="container">
@@ -56,7 +46,7 @@ const Blog = () => {
               {/* Top image with NO bottom margin */}
               <img
                 src={FptUImg}
-                alt={blog.title}
+                alt={blog.postTitle}
                 className="img-fluid w-100"
                 style={{ objectFit: 'cover', display: 'block', marginBottom: '0' }}
               />
@@ -65,15 +55,15 @@ const Blog = () => {
               <div className="service-content p-4">
                 {/* Meta row: treatment (bold) + date */}
                 <div className="d-flex justify-content-between align-items-center mb-2 text-muted" style={{ fontSize: '0.9rem' }}>
-                  <span className="fw-bold">{blog.treatment}</span>
-                  <span>{blog.date}</span>
+                  <span className="fw-bold">Fertility</span>
+                   <span>{new Date(blog.createdDate).toLocaleDateString()}</span>
                 </div>
 
                 {/* Title */}
-                <h4 className="mb-2">{blog.title}</h4>
+                <h4 className="mb-2">{blog.postTitle}</h4>
 
                 {/* Description */}
-                <p>{blog.description}</p>
+                <p>{blog.postContent}</p>
 
                 {/* Read more */}
                 <NavLink to="/blog-detail" className="read-more">

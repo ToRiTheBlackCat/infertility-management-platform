@@ -1,24 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap'; // Ensure you have bootstrap installed
+import { fetchUserProfile, fetchDoctorSchedule } from '../../service/authService';
+import { useParams } from 'react-router-dom';
+import { DoctorData, DoctorScheduleData } from '../../types/common';
+import doctor from '../../assets/img/doctor.jpg'; // Placeholder image, replace with actual doctor image path
 
-const doctor = {
-  name: 'Dr. Hamir Jun.',
-  specialty: 'Infertility Specialist',
-  qualification: 'MD, Reproductive Endocrinology',
-  experience: '15+ years',
-  image: '/assets/img/doctors/doc1.png',
-};
-
-const schedule: { [date: string]: boolean } = {
-  '2025-07-01': true,
-  '2025-07-03': true,
-  '2025-07-05': true,
-  '2025-07-07': true,
-};
 
 const DoctorSchedule = () => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [doctorInfo, setDoctorInfo] = useState<DoctorData | null>(null);
+  const [schedule, setSchedule] = useState<DoctorScheduleData>();
+  const { id } = useParams<string>();
+
+  useEffect(() => {
+    const doctorId = id ? parseInt(id) : 0;
+    const fetchDortorInfo = async () => {
+      try {
+        const doctorData = await fetchUserProfile(doctorId, true);
+        if (doctorData) {
+          setDoctorInfo(doctorData);
+        }
+      } catch (error) {
+        console.error('Error fetching doctor info:', error);
+      }
+    };
+    const fetchSchedule = async () => {
+      try {
+        const scheduleData = await fetchDoctorSchedule(doctorId);
+        if (scheduleData) {
+          // Assuming scheduleData is an object with date keys and boolean values
+          setSchedule(scheduleData);
+        }
+      } catch (error) {
+        console.error('Error fetching doctor schedule:', error);
+      }
+    }
+    fetchSchedule();
+    fetchDortorInfo();
+  }, [id, schedule])
 
   const today = new Date();
   const generateDates = () => {
@@ -26,14 +46,28 @@ const DoctorSchedule = () => {
     for (let i = 0; i < 30; i++) {
       const date = new Date();
       date.setDate(today.getDate() + i);
-      const key = date.toISOString().split('T')[0]; // e.g., "2025-07-01"
-      dates.push({
-        key,
-        available: schedule[key] || false, // fix: use `schedule` directly
-      });
+
+      const weekday = date.getDay(); // 0 (Sun) to 6 (Sat)
+      const key = date.toISOString().split('T')[0];
+
+      let available = false;
+      if (schedule) {
+        switch (weekday) {
+          case 0: available = schedule.sunday; break;
+          case 1: available = schedule.monday; break;
+          case 2: available = schedule.tuesday; break;
+          case 3: available = schedule.wednesday; break;
+          case 4: available = schedule.thursday; break;
+          case 5: available = schedule.friday; break;
+          case 6: available = schedule.saturday; break;
+        }
+      }
+
+      dates.push({ key, available });
     }
     return dates;
   };
+
 
   const handleDateClick = (dateKey: string) => {
     setSelectedDate(dateKey);
@@ -44,13 +78,13 @@ const DoctorSchedule = () => {
     <div className="container py-5">
       <div className="row align-items-center mb-5">
         <div className="col-md-4">
-          <img src={doctor.image} alt={doctor.name} className="img-fluid rounded shadow" />
+          <img src={doctor} alt={doctorInfo?.fullName} className="img-fluid rounded shadow" />
         </div>
         <div className="col-md-8">
-          <h3>{doctor.name}</h3>
-          <p><strong>Specialty:</strong> {doctor.specialty}</p>
-          <p><strong>Qualification:</strong> {doctor.qualification}</p>
-          <p><strong>Experience:</strong> {doctor.experience}</p>
+          <h3>{doctorInfo?.fullName}</h3>
+          <p><strong>Gender:</strong> {doctorInfo?.gender}</p>
+          <p><strong>Qualification:</strong> {doctorInfo?.degree}</p>
+          <p><strong>Phone number:</strong> {doctorInfo?.phoneNumber}</p>
         </div>
       </div>
 
@@ -78,7 +112,7 @@ const DoctorSchedule = () => {
           <Modal.Title>Book Appointment</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>You selected <strong>{selectedDate && new Date(selectedDate).toLocaleDateString()}</strong> with <strong>{doctor.name}</strong>.</p>
+          <p>You selected <strong>{selectedDate && new Date(selectedDate).toLocaleDateString()}</strong> with <strong>{doctorInfo?.fullName}</strong>.</p>
           <p>Would you like to proceed to booking?</p>
         </Modal.Body>
         <Modal.Footer>

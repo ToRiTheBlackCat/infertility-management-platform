@@ -1,34 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { fetchTreatment } from '../../service/authService';
+import { TreatmentData } from '../../types/common';
+import FptUImg from '../../assets/img/fptu.jpg'
 
-const treatments = [
-  {
-    title: 'Intrauterine Insemination (IUI)',
-    image: '/assets/img/treatments/iui.jpg',
-    description: 'A type of artificial insemination that places sperm inside the uterus to facilitate fertilization.',
-    // link: '/treatments/iui'
-  },
-  {
-    title: 'In Vitro Fertilization (IVF)',
-    image: '/assets/img/treatments/ivf.jpg',
-    description: 'A fertility treatment where eggs and sperm are combined outside the body, then implanted in the uterus.',
-    // link: '/treatments/ivf'
-  },
-  {
-    title: 'Egg Freezing',
-    image: '/assets/img/treatments/egg-freezing.jpg',
-    description: 'A method of preserving a woman’s fertility for future use.',
-    // link: '/treatments/egg-freezing'
-  },
-  {
-    title: 'Male Fertility Treatments',
-    image: '/assets/img/treatments/male-fertility.jpg',
-    description: 'Treatments and diagnostics for male infertility issues.',
-    // link: '/treatments/male-fertility'
-  }
-];
 
 const Treatment = () => {
+  const [treatments, setTreatments] = useState<TreatmentData[]>([]);
+  useEffect(() => {
+    const getTreatments = async () => {
+      try {
+        const data = await fetchTreatment();
+        if (data) {
+          setTreatments(data);
+        } else {
+          console.error('No treatments found');
+        }
+      } catch (error) {
+        console.error('Error fetching treatments:', error);
+      }
+    };
+    getTreatments();
+  },[]);
   return (
     <section id="treatment" className="service-section pt-150 pb-120">
       <div className="shape shape-3">
@@ -52,12 +45,12 @@ const Treatment = () => {
             <div className="col-lg-6 col-md-6 mb-30" key={index}>
               <div className="service-item d-flex align-items-start flex-column h-100">
                 <div className="service-icon mb-20 w-100">
-                  <img src={treatment.image} alt={treatment.title} className="img-fluid rounded" />
+                  <img src={FptUImg} alt={treatment.treatmentName} className="img-fluid rounded" />
                 </div>
                 <div className="service-content">
-                  <h4>{treatment.title}</h4>
-                  <p>{treatment.description}</p>
-                  <NavLink to="/treatment-detail" className="read-more">
+                  <h4>{treatment.treatmentName}</h4>
+                  {/* <p>{treatment.description}</p> */}
+                  <NavLink to={`/treatment-detail/${treatment.treatmentId}`} className="read-more">
                     Learn More <i className="lni lni-arrow-right"></i>
                   </NavLink>
                 </div>
