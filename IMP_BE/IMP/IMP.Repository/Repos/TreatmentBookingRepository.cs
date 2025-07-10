@@ -38,6 +38,9 @@ namespace IMP.Repository.Repos
         {
             var result = await _context.TreatmentBookings
                 .Where(x => x.DoctorId == doctorId)
+                .Include(x => x.Treatment)
+                .Include(x => x.Patient)
+                .Include(x => x.Appointments)
                 .ToListAsync();
             return result;
         }
