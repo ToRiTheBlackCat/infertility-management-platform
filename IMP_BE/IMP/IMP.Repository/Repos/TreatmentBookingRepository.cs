@@ -13,7 +13,7 @@ namespace IMP.Repository.Repos
     {
         private readonly InfertilityTreatmentDBContext _context;
 
-        public TreatmentBookingRepository(InfertilityTreatmentDBContext context) : base(context) 
+        public TreatmentBookingRepository(InfertilityTreatmentDBContext context) : base(context)
         {
             _context = context;
         }
@@ -46,6 +46,8 @@ namespace IMP.Repository.Repos
         {
             var result = await _context.TreatmentBookings
                 .Where(x => x.PatientId == patientId)
+                .Include(x => x.Treatment)
+                .Include(x => x.Doctor)
                 .ToListAsync();
             return result;
         }
