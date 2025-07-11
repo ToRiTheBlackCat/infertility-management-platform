@@ -1,4 +1,5 @@
-﻿using IMP.Repository.ViewModels.User;
+﻿using IMP.Repository.Models;
+using IMP.Repository.ViewModels.User;
 using IMP.Service.Helpers;
 using IMP.Service.Services.DoctorSer;
 using IMP.Service.Services.PatientSer;
@@ -83,56 +84,77 @@ namespace IMP.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
+
+            var patient = await _patientService.GetPatientByUserId(request.PatientId);
+            if (patient == null)
             {
-                return Unauthorized();
+                return NotFound();
             }
-            var updated = await _patientService.UpdatePatientProfile(request, userId);
+
+            var updated = await _patientService.UpdatePatientProfile(request, patient);
             if (!updated)
             {
                 return BadRequest("Failed to update profile");
             }
+
             return Ok("Profile updated successfully");
         }
 
         [HttpPut("doctor/update-profile")]
+        [Authorize(Roles = "2")]
         public async Task<IActionResult> UpdateDoctorProfile([FromBody] UpdateDoctorRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
+
+            var doctor = await _dotorService.GetDoctorByUserId(request.DoctorId);
+            if (doctor == null)
             {
-                return Unauthorized();
+                return NotFound();
             }
-            var updated = await _dotorService.UpdateDoctorProfile(request, userId);
+
+            var updated = await _dotorService.UpdateDoctorProfile(request, doctor);
             if (!updated)
             {
                 return BadRequest("Failed to update profile");
             }
+
             return Ok("Profile updated successfully");
         }
 
-        // <summary>
-        // Get the patient profile of the currently authenticated user. FOR TESTING AND DEVELOPMENT PURPOSES ONLY/ MAYBE
-        // </summary>
-        [HttpGet("patient/profile")]
-        public async Task<IActionResult> GetPatientProfile()
+
+        [HttpPost("profile")]
+        public async Task<IActionResult> GetUserProfile([FromBody] UserProfileRequest request)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
+            if (!ModelState.IsValid)
             {
-                return Unauthorized();
+                return BadRequest(ModelState);
             }
-            var patientProfile = await _patientService.GetPatientByUserId (userId);
-            if (patientProfile == null)
+
+            if (request.isDoctor == false)
             {
-                return NotFound("Patient profile not found");
+                var patientProfile = await _patientService.GetPatientByUserId(request.UserId);
+
+                if (patientProfile == null)
+                {
+                    return NotFound("Patient profile not found");
+                }
+
+                return Ok(patientProfile);
             }
-            return Ok(patientProfile);
+            else
+            {
+                var doctorProfile = await _dotorService.GetDoctorByUserId(request.UserId);
+
+                if (doctorProfile == null)
+                {
+                    return NotFound("Doctor profile not found");
+                }
+
+                return Ok(doctorProfile);
+            }
         }
     }
 }

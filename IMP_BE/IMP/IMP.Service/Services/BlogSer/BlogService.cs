@@ -14,20 +14,18 @@ namespace IMP.Service.Services.BlogSer
     public interface IBlogService
     {
         Task<IEnumerable<BlogPost>> GetAllBlogPostsAsync();
-        Task<BlogPost?> GetBlogPostByIdAsync(int id);
+        Task<BlogPost?> GetBlogPostByIdAsync(int blogId);
         Task<BlogPost?> CreateBlogPostAsync(CreateBlogRequest blogPost);
-        Task<BlogPost?> UpdateBlogPostAsync(int id, UpdateBlogRequest blogPost);
-        Task<bool> DeleteBlogPostAsync(int id);
+        Task<BlogPost?> UpdateBlogPostAsync(int blogId, UpdateBlogRequest blogPost);
+        Task<bool> DeleteBlogPostAsync(int blogId);
     }
     public class BlogService : IBlogService
     {
         private readonly UnitOfWork _unitOfWork;
-        private readonly IConfiguration _configure;
 
-        public BlogService(UnitOfWork unitOfWork, IConfiguration configuration)
+        public BlogService(UnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _configure = configuration;
         }
 
         public async Task<BlogPost?> CreateBlogPostAsync(CreateBlogRequest blogPost)
@@ -62,12 +60,12 @@ namespace IMP.Service.Services.BlogSer
             }
         }
 
-        public async Task<bool> DeleteBlogPostAsync(int id)
+        public async Task<bool> DeleteBlogPostAsync(int blogId)
         {
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
-                var blogPost = await _unitOfWork.BlogRepo.GetByIdAsync(id);
+                var blogPost = await _unitOfWork.BlogRepo.GetByIdAsync(blogId);
                 if (blogPost == null)
                 {
                     await _unitOfWork.RollbackTransactionAsync();
@@ -103,41 +101,39 @@ namespace IMP.Service.Services.BlogSer
             return blogPosts;
         }
 
-        public async Task<BlogPost?> GetBlogPostByIdAsync(int id)
+        public async Task<BlogPost?> GetBlogPostByIdAsync(int blogId)
         {
             await _unitOfWork.BeginTransactionAsync();
-            var blogPost = await _unitOfWork.BlogRepo.GetByIdAsync(id);
+            var blogPost = await _unitOfWork.BlogRepo.GetByIdAsync(blogId);
             if (blogPost == null)
             {
                 await _unitOfWork.RollbackTransactionAsync();
                 return null;
             }
-            blogPost.Viewers += 1; 
+            blogPost.Viewers += 1;
             await _unitOfWork.BlogRepo.UpdateAsync(blogPost);
             await _unitOfWork.CommitTransactionAsync();
             return blogPost;
         }
 
-        public async Task<BlogPost?> UpdateBlogPostAsync(int id, UpdateBlogRequest blogPost)
+        public async Task<BlogPost?> UpdateBlogPostAsync(int blogId, UpdateBlogRequest blogPost)
         {
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
-                var existingBlogPost = await _unitOfWork.BlogRepo.GetByIdAsync(id);
+                var existingBlogPost = await _unitOfWork.BlogRepo.GetByIdAsync(blogId);
                 if (existingBlogPost == null)
                 {
                     await _unitOfWork.RollbackTransactionAsync();
                     return null;
                 }
                 existingBlogPost.Image = blogPost.Image ?? existingBlogPost.Image;
-                existingBlogPost.DoctorId = blogPost.DoctorId != 0 ? blogPost.DoctorId : existingBlogPost.DoctorId; 
                 existingBlogPost.PostTitle = blogPost.PostTitle ?? existingBlogPost.PostTitle;
                 existingBlogPost.PostContent = blogPost.PostContent ?? existingBlogPost.PostContent;
-                existingBlogPost.Viewers = blogPost.Viewers ?? existingBlogPost.Viewers;
-                existingBlogPost.Status = blogPost.Status ?? existingBlogPost.Status;
 
                 await _unitOfWork.BlogRepo.UpdateAsync(existingBlogPost);
-                await _unitOfWork.CommitTransactionAsync();                
+                await _unitOfWork.CommitTransactionAsync();
+
                 return await _unitOfWork.BlogRepo.GetByIdAsync(existingBlogPost.BlogPostId);
             }
             catch (Exception ex)

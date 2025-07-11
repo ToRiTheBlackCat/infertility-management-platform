@@ -16,11 +16,5 @@ namespace IMP.Repository.Repos
         {
             _context = context;
         }
-
-        public async Task<Patient> GetPatientByUserId(int userId)
-        {
-            return await _context.Patients
-                .FirstOrDefaultAsync(x => x.PatientNavigation.UserId == userId);
-        }
     }
 }

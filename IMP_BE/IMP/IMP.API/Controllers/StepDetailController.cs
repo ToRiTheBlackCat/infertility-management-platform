@@ -34,6 +34,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPost("doctor/{appointmentId}")]
+        [Authorize(Roles = "3")]
         public async Task<IActionResult> CreateStepDetail([FromBody] StepDetailCreateModel model, int appointmentId)
         {
             if (!ModelState.IsValid)
@@ -63,6 +64,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpPut("doctor/{appointmentId}")]
+        [Authorize(Roles = "3")]
         public async Task<IActionResult> UpdateStepDetail([FromBody] StepDetailUpdateModel model, int appointmentId)
         {
             if (!ModelState.IsValid)
@@ -93,6 +95,7 @@ namespace IMP.API.Controllers
 
 
         [HttpPut("doctor/done/{appointmentId}")]
+        [Authorize(Roles = "3")]
         public async Task<IActionResult> CheckDoneStepDetail([FromBody] StepDetailCheckDoneModel model, int appointmentId)
         {
 
@@ -123,6 +126,7 @@ namespace IMP.API.Controllers
         }
 
         [HttpDelete("doctor/{appointmentId}")]
+        [Authorize(Roles = "3")]
         public async Task<IActionResult> DeleteStepDetail([FromBody] StepDetailDeleteModel model, int appointmentId)
         {
             if (!ModelState.IsValid)
