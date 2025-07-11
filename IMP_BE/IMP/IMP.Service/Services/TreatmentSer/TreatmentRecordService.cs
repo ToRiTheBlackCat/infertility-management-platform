@@ -69,7 +69,7 @@ namespace IMP.Service.Services.TreatmentSer
             var success = true;
             var errorMessages = new List<InputErrorModel>();
 
-            var booking = await _unitOfWork.BookingRepo.GetFirstWithIncludeAsync(x => x.BookingId == x.BookingId, [x => x.Appointments]);
+            var booking = await _unitOfWork.BookingRepo.GetFirstWithIncludeAsync(x => x.BookingId == model.BookingId, [x => x.Appointments]);
             if (booking == null)
             {
                 success = false;
