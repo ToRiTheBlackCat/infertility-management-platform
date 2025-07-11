@@ -128,7 +128,7 @@ namespace IMP.Service.Services.AppointmentSer
                     errorMessages.Add(new InputErrorModel(nameof(model.DoctorId), $"ID provided({model.DoctorId}) differs from ID in booking({booking.DoctorId})"));
                 }
 
-                var daysDifference = (DateTime.Now - appointment.Date).Days;
+                var daysDifference = (DateTime.Now.Date - appointment.Date.Date).Days;
                 if (daysDifference >= -UpdateAppointmentModel.ValidUpdateDateRange)
                 {
                     success = false;
@@ -224,7 +224,7 @@ namespace IMP.Service.Services.AppointmentSer
                     errorMessages.Add(new InputErrorModel(nameof(model.DoctorId), $"ID provided({model.DoctorId}) differs from ID in booking({booking.DoctorId})"));
                 }
 
-                var daysDifference = (DateTime.Now - appointment.Date).Days;
+                var daysDifference = (DateTime.Now.Date - appointment.Date.Date).Days;
                 if (daysDifference >= -UpdateAppointmentModel.ValidUpdateDateRange)
                 {
                     success = false;
@@ -240,6 +240,12 @@ namespace IMP.Service.Services.AppointmentSer
             try
             {
                 await _unitOfWork.BeginTransactionAsync();
+
+                var steps = await _unitOfWork.StepDetailRepo.GetAllAsync();
+                foreach (var step in steps.Where(x => x.AppointmentId == appointment.AppointmentId))
+                {
+                    _unitOfWork.StepDetailRepo.Remove(step);
+                }
 
                 await _unitOfWork.AppointmentRepo.RemoveAsync(appointment);
                 await _unitOfWork.SaveChangesAsync();
