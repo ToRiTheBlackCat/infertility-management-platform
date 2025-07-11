@@ -160,9 +160,9 @@ namespace IMP.Service.Services.TreatmentSer
 
         private async Task<bool> CanModify(TreatmentStep treatmentStep)
         {
-            var stepRelative = await _unitOfWork.TreatmentStepRepo.GetByIdWithIncludeAsync(treatmentStep.StepId, "StepId", x => x.StepDetail);
+            var stepRelative = await _unitOfWork.TreatmentStepRepo.GetByIdWithIncludeAsync(treatmentStep.StepId, "StepId", x => x.StepDetails);
 
-            if (stepRelative?.StepDetail != null)
+            if (stepRelative?.StepDetails != null)
                 return false;
 
             return true;

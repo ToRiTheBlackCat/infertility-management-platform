@@ -221,11 +221,10 @@ public partial class InfertilityTreatmentDBContext : DbContext
 
         modelBuilder.Entity<StepDetail>(entity =>
         {
-            entity.HasKey(e => e.StepId);
+            entity.HasKey(e => new { e.StepId, e.AppointmentId });
 
             entity.ToTable("StepDetail");
 
-            entity.Property(e => e.StepId).ValueGeneratedNever();
             entity.Property(e => e.Status)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -236,8 +235,8 @@ public partial class InfertilityTreatmentDBContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StepDetail_Appointment");
 
-            entity.HasOne(d => d.Step).WithOne(p => p.StepDetail)
-                .HasForeignKey<StepDetail>(d => d.StepId)
+            entity.HasOne(d => d.Step).WithMany(p => p.StepDetails)
+                .HasForeignKey(d => d.StepId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StepDetail_TreatmentStep");
         });

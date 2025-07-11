@@ -13,7 +13,7 @@ public partial class TreatmentStep
 
     public string Description { get; set; }
 
-    public virtual StepDetail StepDetail { get; set; }
+    public virtual ICollection<StepDetail> StepDetails { get; set; } = new List<StepDetail>();
 
     public virtual Treatment Treatment { get; set; }
 }
