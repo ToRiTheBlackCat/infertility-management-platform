@@ -4,6 +4,9 @@ import "../../assets/css/main.css";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import { LoginUser } from "../../service/userService"; 
 import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setUserRedux } from "../../store/userSlice";
+import Cookies from "js-cookie";
 
 interface FormState {
   name?: string;
@@ -15,6 +18,7 @@ const Login: React.FC = () => {
   const [type, setType] = useState<"signIn" | "signUp">("signIn");
   const location = useLocation(); // 👈 get location from react-router-dom
   const navigate = useNavigate(); 
+  const dispatch = useDispatch();
 
   // Detect URL hash when the page loads
   useEffect(() => {
@@ -51,6 +55,8 @@ const Login: React.FC = () => {
       const response = await LoginUser(email, password);
       if(response){
         toast.success("Login successful!");
+        dispatch(setUserRedux(response))
+        Cookies.set("user", JSON.stringify(response), { expires: 7 });
         navigate("/"); 
       }else{
         toast.error("Login failed. Please check your credentials.");

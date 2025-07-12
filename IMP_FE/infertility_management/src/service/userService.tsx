@@ -1,6 +1,13 @@
 import axiosInstance from "../config/axios";
 import { User } from "../types/user";
 
+export const getLocalISOTime = () => {
+    const now = new Date();
+    const offset = now.getTimezoneOffset(); // in minutes
+    const localTime = new Date(now.getTime() - offset * 60 * 1000);
+    return localTime.toISOString().slice(0, -1); // remove the 'Z'
+};
+
 export const LoginUser = async (email: string, password: string): Promise<User | null> => {
     try {
         const response = await axiosInstance.post<User>('/Auth/login', {
@@ -20,22 +27,22 @@ export const LoginUser = async (email: string, password: string): Promise<User |
     }
 }
 
-export const RefreshToken = async (refreshToken: string): Promise<{accessToken: string; refreshToken: string} | null> => {
-    try{
-        const response = await axiosInstance.post<{accessToken: string; refreshToken: string}>('/Auth/refresh',{
-            refreshToken,
-        });
+export const RefreshToken = async (refreshToken: string): Promise<{ accessToken: string; refreshToken: string } | null> => {
+    try {
+        const response = await axiosInstance.post<{ accessToken: string; refreshToken: string }>(
+            `/api/Auth/refresh?refreshToken=${encodeURI(refreshToken)}`
+        );
         const { accessToken, refreshToken: newRefreshToken } = response.data;
 
         if (accessToken && newRefreshToken) {
-        return {
-            accessToken,
-            refreshToken: newRefreshToken,
-        };
+            return {
+                accessToken,
+                refreshToken: newRefreshToken,
+            };
         } else {
-        return null;
+            return null;
         }
-    } catch(error){
+    } catch (error) {
         console.error('Refresh token error', error);
         return null;
     }

@@ -5,7 +5,9 @@ import {Outlet,Link} from "react-router-dom";
 import Footer from './components/Utils/Footer';
 import SliderComponent from './components/Utils/SliderComponent';
 import ScrollToTop from './components/Utils/ScrollToTop ';
+import { useTokenWatcher } from './hooks/useTokenWatcher';
 function App() {
+  useTokenWatcher();
   return (
     <div className="app-container">
       <ScrollToTop/>

@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import IMP_logo from '../../assets/img/logo/IMP_logo.jpg';
 import { Link, NavLink } from 'react-router-dom';
-const Header = () => {
-  const isLogin = !!localStorage.getItem('token'); // or from context or Redux
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
+import { User } from '../../types/user';
+import { fetchUserProfile } from '../../service/authService';
 
-  
+const Header = () => {
+  const isLogin = useSelector((state: RootState) => state.user.accessToken) !== null;
+  const roleId = Number(useSelector((state: RootState) => state.user.roleId))
+
+
   return (
     <header id="home" className="header">
       {/* Header Top */}
@@ -58,7 +64,7 @@ const Header = () => {
 
                 <div className="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                   <ul id="nav" className="navbar-nav ml-auto">
-                  
+
                     <li className="nav-item">
                       <NavLink
                         to="/"
@@ -112,9 +118,15 @@ const Header = () => {
                       <ul className="user-menu">
                         {isLogin ? (
                           <>
-                            <li><a href="/#">My Profile</a></li>
-                            <li><a href="/#">My Booking Appointment</a></li>
-                            <li><a href="/#">My Booking History</a></li>
+                            <li><a href="/profile">My Profile</a></li>
+                            {roleId === 3 ? (
+                              <li><a href="/doctor-appointment">Doctor Booking Appointment</a></li>
+                            ) : (
+                              <li><a href="/booking-appointment">My Booking Appointment</a></li>
+                            )}
+                            {roleId === 3 && (
+                              <li><a href="/doctor-blog">My Blog</a></li>
+                            )}
                             <li><a href="/login">Sign Out</a></li>
                           </>
                         ) : (

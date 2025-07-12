@@ -1,0 +1,39 @@
+.doctor-card {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  
+  .doctor-card:hover {
+    cursor: pointer;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .doctor-card {
+      min-width: 250px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .doctor-card {
+      min-width: 220px;
+    }
+  }
+  
+  /* Smooth scrollbar for horizontal scroll */
+  .overflow-auto::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .overflow-auto::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  .overflow-auto::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+  
+  .overflow-auto::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
