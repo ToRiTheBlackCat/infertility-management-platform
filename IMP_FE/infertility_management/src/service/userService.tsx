@@ -1,4 +1,5 @@
 import axiosInstance from "../config/axios";
+import { SignUpData } from "../types/common";
 import { User } from "../types/user";
 
 export const getLocalISOTime = () => {
@@ -27,6 +28,17 @@ export const LoginUser = async (email: string, password: string): Promise<User |
     }
 }
 
+export const SignUpUser = async ( body: SignUpData) =>{
+    try{
+        const response = await axiosInstance.post(`/User/register-patient`,body);
+        if(response){
+            return response.data
+        }
+    }catch (error) {
+        console.error('Login error', error);
+        return null;
+    }
+}
 export const RefreshToken = async (refreshToken: string): Promise<{ accessToken: string; refreshToken: string } | null> => {
     try {
         const response = await axiosInstance.post<{ accessToken: string; refreshToken: string }>(

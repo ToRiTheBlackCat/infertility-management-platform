@@ -69,7 +69,9 @@ const TreatmentDetail = () => {
             </div>
             <div className="col-lg-6">
               <h3 className="mb-3">Overview</h3>
-              <p>{treatment?.description}</p>
+              {treatment?.description?.split('\\n').map((line, index) => (
+                <p key={index}>{line}</p>
+              ))}
               <p><strong>Specialization:</strong> {treatment?.expertField?.expertFieldName}</p>
               <p><strong>Average Rating:</strong> {treatment?.ratingScore} ⭐</p>
             </div>
