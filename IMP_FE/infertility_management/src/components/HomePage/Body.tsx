@@ -98,7 +98,7 @@ const Body = () => {
                   </div>
                   <div className="service-content">
                     <h4>{service.treatmentName}</h4>
-                    <p>Lorem ipsum dolor sit amet, consetet sadipscing elitr, sed dinonumy eirmod tempor invidunt.</p>
+                    <p>{service.description?.split('.')[0] + '.'}</p>
                     <a href={`/treatment-detail/${service.treatmentId}`} className="read-more">Read More <i className="lni lni-arrow-right"></i></a>
                   </div>
                   <div className="service-overlay img-bg"></div>

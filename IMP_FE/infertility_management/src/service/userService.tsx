@@ -30,7 +30,7 @@ export const LoginUser = async (email: string, password: string): Promise<User |
 export const RefreshToken = async (refreshToken: string): Promise<{ accessToken: string; refreshToken: string } | null> => {
     try {
         const response = await axiosInstance.post<{ accessToken: string; refreshToken: string }>(
-            `/api/Auth/refresh?refreshToken=${encodeURI(refreshToken)}`
+            `/Auth/refresh?refreshToken=${encodeURI(refreshToken)}`
         );
         const { accessToken, refreshToken: newRefreshToken } = response.data;
 

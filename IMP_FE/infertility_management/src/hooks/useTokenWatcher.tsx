@@ -60,7 +60,7 @@ export function useTokenWatcher() {
             if (!refreshToken) throw new Error('No refresh token found');
 
             const refreshData = await RefreshToken(refreshToken);
-            // console.log("result", refreshData);
+            console.log("result", refreshData);
             if (refreshData?.accessToken) {
               const updatedUser = {
                 ...user,
@@ -68,7 +68,7 @@ export function useTokenWatcher() {
                 refreshToken: refreshData.refreshToken,
               };
 
-            //   localStorage.removeItem("refreshToken");
+              localStorage.removeItem("refreshToken");
               dispatch(setUserRedux(updatedUser));
               Cookies.set('user', JSON.stringify(updatedUser), { expires: 7 });
 
@@ -119,7 +119,7 @@ export function useTokenWatcher() {
                 refreshToken: refreshData.refreshToken,
               };
 
-            //   localStorage.removeItem("refreshToken");
+              localStorage.removeItem("refreshToken");
               dispatch(setUserRedux(updatedUser));
               Cookies.set('user', JSON.stringify(updatedUser), { expires: 7 });
 

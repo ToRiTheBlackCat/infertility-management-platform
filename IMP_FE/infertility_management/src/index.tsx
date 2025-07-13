@@ -32,6 +32,12 @@ import BookingAppointmentDetail from './pages/BookingAppointmentDetail';
 import DoctorAppointment from './pages/DoctorAppointment';
 import DoctorAppointmentDetail from './pages/DoctorAppointmentDetail';
 import DoctorBlog from './pages/DoctorBlog';
+import ManagerDoctor from './pages/ManagerDoctor';
+import ManagerPage from './pages/ManagerPage';
+import ExperField from './pages/ExpertField';
+import ManagerTreatment from './pages/ManagerTreatment';
+import ManagerDoctorSchedule from './pages/ManagerDoctorSchedule';
+import AdminPage from './pages/AdminPage';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { ToastContainer } from 'react-toastify';
@@ -47,33 +53,40 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <>
-  <ToastContainer/>
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<Body />} />
-            <Route path="/treatments" element={<Treatment />} />
-            <Route path="/bookings" element={<Booking />} />
-            <Route path="/doctors" element={<Doctor />} />
-            <Route path="/blogs" element={<Blog />} />
-            <Route path="/blog-detail" element={<BlogDetail />} />
-            <Route path="/contacts" element={<Contact />} />
-            <Route path="/treatment-detail/:id" element={<TreatmentDetail />} />
-            <Route path="/doctor-schedule/:id" element={<DoctorSchedule />} />
-            <Route path='/booking-appointment' element={<BookingAppointment/>}/>
-            <Route path='/profile' element={<Profile/>}/>
-            <Route path='/booking-detail/:bookingId' element={<BookingAppointmentDetail/>}/>
-            <Route path='/doctor-appointment' element={<DoctorAppointment/>}/>
-            <Route path='/doctor-appointment-detail/:bookingId' element={<DoctorAppointmentDetail/>}/>
-            <Route path='/doctor-blog' element={<DoctorBlog/>}/>
-          </Route>
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
+    <ToastContainer />
+    <React.StrictMode>
+      <Provider store={store}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<App />}>
+              <Route index element={<Body />} />
+              <Route path="/treatments" element={<Treatment />} />
+              <Route path="/bookings" element={<Booking />} />
+              <Route path="/doctors" element={<Doctor />} />
+              <Route path="/blogs" element={<Blog />} />
+              <Route path="/blog-detail" element={<BlogDetail />} />
+              <Route path="/contacts" element={<Contact />} />
+              <Route path="/treatment-detail/:id" element={<TreatmentDetail />} />
+              <Route path="/doctor-schedule/:id" element={<DoctorSchedule />} />
+              <Route path='/booking-appointment' element={<BookingAppointment />} />
+              <Route path='/profile' element={<Profile />} />
+              <Route path='/booking-detail/:bookingId' element={<BookingAppointmentDetail />} />
+              <Route path='/doctor-appointment' element={<DoctorAppointment />} />
+              <Route path='/doctor-appointment-detail/:bookingId' element={<DoctorAppointmentDetail />} />
+              <Route path='/doctor-blog' element={<DoctorBlog />} />
+              <Route path='/manager' element={<ManagerPage />}>
+                <Route path='doctor' element={<ManagerDoctor />} />
+                <Route path='expertField' element={<ExperField/>}/>
+                <Route path='treatment' element={<ManagerTreatment/>}/>
+                <Route path='scheduleDoctor' element={<ManagerDoctorSchedule/>}/>
+              </Route>
+              <Route path='/admin' element={<AdminPage/>}/>
+            </Route>
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+      </Provider>
+    </React.StrictMode>
   </>
 );
 

@@ -57,6 +57,13 @@ export type DoctorScheduleData = {
   sunday: boolean;
 };
 export type BookingTreatmentData = {
+    bookingId: number
+    patientId: number;
+    doctorId: number;
+    treatmentId: number;
+    createdDate: string;
+}
+export type CreateBookingTreatmentData = {
     patientId: number;
     doctorId: number;
     treatmentId: number;
@@ -137,4 +144,34 @@ export type updateDoctorData = {
     gender: string,
     address: string,
     degree: string,
+}
+export type expertFieldData = {
+    expertFieldId: number,
+    expertFieldName: string
+}
+export type createTreatmentData = {
+    treatmentName: string,
+    description: string,
+    treatmentImage: File,
+    expertFieldId: number,
+}
+export type updateTreatmentData = {
+    treatmentName: string,
+    description: string,
+    expertFieldId: number,
+}
+export type TreatmentRecordItem = {
+    patientId: number,
+    bookingId: number,
+    startDate: string,
+    endDate: string,
+    bookings: BookingTreatmentData;
+    patient: ProfileData
+}
+export type TreatmentRecord = {
+    items: TreatmentRecordItem[],
+    pageCount: number,
+    itemCount: number,
+    pageSize: number,
+    pageNumber: number
 }

@@ -57,7 +57,14 @@ const Login: React.FC = () => {
         toast.success("Login successful!");
         dispatch(setUserRedux(response))
         Cookies.set("user", JSON.stringify(response), { expires: 7 });
-        navigate("/"); 
+        if(response.roleId=== "2"){
+          navigate("/manager/doctor")
+        }else if(response.roleId === "1"){
+          navigate("/admin")
+        }else{
+          navigate("/"); 
+        }
+        
       }else{
         toast.error("Login failed. Please check your credentials.");
       }

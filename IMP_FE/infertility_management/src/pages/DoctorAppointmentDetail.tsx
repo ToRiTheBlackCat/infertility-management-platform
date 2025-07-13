@@ -20,6 +20,7 @@ const DoctorAppointmentDetail: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(false);
     const [noteInput, setNoteInput] = useState("");
+    const [dateInput, setDateInput] = useState<string>("");
     const [appointments, setAppointments] = useState<PatientAppointment[]>([]);
     const [showModal, setShowModal] = useState<boolean>(false)
     const [stepDescriptionInput, setStepDescriptionInput] = useState("");
@@ -312,7 +313,7 @@ const DoctorAppointmentDetail: React.FC = () => {
         setCreating(true);
         const result = await createDoctorAppointment(
             parseInt(bookingId),
-            new Date(state.createdDate),
+            new Date(dateInput),
             state.patientId,
             doctorId,
             noteInput
@@ -839,6 +840,26 @@ const DoctorAppointmentDetail: React.FC = () => {
                                                 border: '1px solid #ccc',
                                                 fontSize: '1rem',
                                                 resize: 'vertical'
+                                            }}
+                                        />
+                                    </div>
+                                    {/* Select Date */}
+                                    <div style={{ marginBottom: '20px' }}>
+                                        <label htmlFor="appointment-date" style={{ display: 'block', fontWeight: 'bold', marginBottom: '8px' }}>
+                                            Appointment Date
+                                        </label>
+                                        <input
+                                            id="appointment-date"
+                                            type="date"
+                                            value={dateInput}
+                                            onChange={(e) => setDateInput(e.target.value)}
+                                            style={{
+                                                padding: '10px',
+                                                fontSize: '1rem',
+                                                borderRadius: '8px',
+                                                border: '1px solid #ccc',
+                                                maxWidth: '300px',
+                                                width: '100%'
                                             }}
                                         />
                                     </div>
